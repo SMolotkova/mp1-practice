@@ -1,3 +1,4 @@
+Сортировки
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h> 
@@ -62,7 +63,7 @@ while (i != 6);
 
 
 
-
+Печать списка файлов и их размеров в Си
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
