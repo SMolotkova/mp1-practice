@@ -1,4 +1,4 @@
-Сортировки
+Сортировки+ еще доделать, всего 6 штук
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h> 
