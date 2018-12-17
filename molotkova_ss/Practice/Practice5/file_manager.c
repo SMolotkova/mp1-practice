@@ -283,7 +283,7 @@ int main ()
    for(t=0; t<size; t++) printf("%d ", nums[t]);
    printf("\n");
  
-    start = GetTickCount();
+   /*!!!*/ start = GetTickCount();
     /*Пузырьковый метод*/
     for(a=1; a<size; a++)
         for(b=size-1; b>=a; b--) {
@@ -294,7 +294,7 @@ int main ()
             }
         }
     /*--------------------------*/
-        finish = GetTickCount();
+     /*!!!*/   finish = GetTickCount();
  
     for(t=0; t<size; t++) printf("%d ", nums[t]);
     printf("\nSeconds: %.15f\n", finish - start);
@@ -302,3 +302,4 @@ int main ()
     return 0;
 }
  
+через clock_t
