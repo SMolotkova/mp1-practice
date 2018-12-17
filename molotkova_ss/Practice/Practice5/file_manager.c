@@ -301,5 +301,16 @@ int main ()
  
     return 0;
 }
- 
+#include <stdio.h>
+#include <time.h>
+int main(void)
+{
+clock_t start, stop;
+unsigned long t;
+start = clock ();
+for (t=0; t<500000L; t + +);
+stop = clock();
+printf("Loop required %f seconds", (stop - start) / CLK_TCK);
+return 0;
+} 
 через clock_t
