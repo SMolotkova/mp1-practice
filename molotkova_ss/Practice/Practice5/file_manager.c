@@ -262,5 +262,43 @@ int ListDirectoryContents(const wchar_t *sDir)
     FindClose(hFind);
     return 0; 
 } 
-
+ счетчик
+ #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include<windows.h>
+ 
+int main ()
+{
+    double start, finish;
+    int nums[10000];
+    int a, b, t;
+    int size;
+ 
+    size = 10000;
+    srand(time(NULL));
+    for(t=0; t<size; t++) nums[t] = rand() % 100;
+ 
+   printf("First massive:\n");
+   for(t=0; t<size; t++) printf("%d ", nums[t]);
+   printf("\n");
+ 
+    start = GetTickCount();
+    /*Пузырьковый метод*/
+    for(a=1; a<size; a++)
+        for(b=size-1; b>=a; b--) {
+            if(nums[b-1]>nums[b]) {
+                t = nums[b-1];
+                nums[b-1] = nums[b];
+                nums[b] = t;
+            }
+        }
+    /*--------------------------*/
+        finish = GetTickCount();
+ 
+    for(t=0; t<size; t++) printf("%d ", nums[t]);
+    printf("\nSeconds: %.15f\n", finish - start);
+ 
+    return 0;
+}
  
