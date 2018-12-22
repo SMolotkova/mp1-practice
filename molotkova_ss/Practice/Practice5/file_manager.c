@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
-
-
+#define MIN_REPEAT_FILES 31
+#define MAX_COUNT_OF_FILES 50000
 #define SIZE_OF_BUFFER 2048 //максимльная длина строки
 
 void Input(wchar_t **sDir)                                       
@@ -19,19 +19,14 @@ void Input(wchar_t **sDir)
     swprintf(*sDir, SIZE_OF_BUFFER, L"%hs", vvodstring);
 }
 
-void Output(wchar_t **filesName, ULONGLONG *filesSize, int *filesIndex, int N,
-    int ascDescType)
+void Output(wchar_t **filesName, ULONGLONG *filesSize, int *filesIndex, int N)
 {
     int i;
 
     printf("\n Folder contents:\n");
 
-    if (ascDescType == 1)
         for (i = 0; i < N; i++)
             wprintf(L" %d. File: %s Size: %lld bytes\n", i + 1, filesName[filesIndex[i]], filesSize[filesIndex[i]]);
-    else
-        for (i = N; i > 0; i--)
-            wprintf(L" %d. File: %s Size: %lld bytes\n", N - i + 1, filesName[filesIndex[i - 1]], filesSize[filesIndex[i - 1]]);
 }
 int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *filesSize)
 {
@@ -56,11 +51,11 @@ int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *f
             ULONGLONG fileSize = fdFile.nFileSizeHigh;
             fileSize <<= sizeof(fdFile.nFileSizeHigh) * 8;
             fileSize |= fdFile.nFileSizeLow;
-            filesSize[count] = fileSize;
+            filesSize[j] = fileSize;
 
-            filesName[count] = (wchar_t*)malloc(SIZE_OF_BUFFER * sizeof(wchar_t));
+            filesName[j] = (wchar_t*)malloc(SIZE_OF_BUFFER * sizeof(wchar_t));
             wsprintf(sPath, L"%s\\%s", sDir, fdFile.cFileName);
-            wsprintf(filesName[count++], L"%s", sPath);
+            wsprintf(filesName[j++], L"%s", sPath);
         }
     } while (FindNextFile(hFind, &fdFile));
 
@@ -100,8 +95,8 @@ void QuickSplit(ULONGLONG *filesSize, int *i, int *j, int mid, int *filesIndex)
 
         if (*i <= *j)
         {
-            Swap_ULONGLONG(&(filesSize[*i]), &(filesSize[*j]));
-            Swap_Ulong(&(filesIndex[*i]), &(filesIndex[*j]));
+            swap_ULONGLONG(&(filesSize[*i]), &(filesSize[*j]));
+            swap_int(&(filesIndex[*i]), &(filesIndex[*j]));
 
             (*i)++;
             (*j)--;
@@ -146,8 +141,8 @@ void BubbleSort(ULONGLONG *filesSize, int *filesIndex, int N)
         {
             if (filesSize[j - 1] > filesSize[j])
             {
-                Swap_ULONGLONG(&filesSize[j - 1], &filesSize[j]);
-                Swap_Ulong(&filesIndex[j - 1], &filesIndex[j]);
+                swap_ULONGLONG(&filesSize[j - 1], &filesSize[j]);
+                swap_int(&filesIndex[j - 1], &filesIndex[j]);
             }
         }
 }
@@ -195,8 +190,8 @@ void SelectionSort(ULONGLONG *filesSize, int *filesIndex, int N)
             }
         }
 
-        Swap_ULONGLONG(&filesSize[keyIndex], &filesSize[i]);
-        Swap_Ulong(&filesIndex[i], &filesIndex[keyIndex]);
+        swap_ULONGLONG(&filesSize[keyIndex], &filesSize[i]);
+        swap_int(&filesIndex[i], &filesIndex[keyIndex]);
     }
 }
 
@@ -271,8 +266,8 @@ void main()
     ULONGLONG *filesSize, *tmpSizes;
     clock_t start, end;
     int *filesIndex;
-    int count = -1, i = 0;
-    int typeOfSort = 0,f = 0;
+    int j = -1, i = 0;
+    int method = 0,f = 0;
 
     filesName = (wchar_t**)malloc(MAX_COUNT_OF_FILES * sizeof(wchar_t*));
     filesSize = (ULONGLONG*)malloc(MAX_COUNT_OF_FILES * sizeof(ULONGLONG));
@@ -280,61 +275,61 @@ void main()
     printf("\t\t\t\tFile Manager");
     printf("\n\tWay to the folder:");
 
-    while (count == -1)
+    while (j == -1)
     {
-        InputDirectory(&filesPath);
-        count = ListDirectoryContents(filesPath, filesName, filesSize);
+        Input(&filesPath);
+        j = ListDirectoryContents(filesPath, filesName, filesSize);
     }
 
-    filesIndex = (int*)malloc(count * sizeof(int));
-    for (i = 0; i < count; i++)
+    filesIndex = (int*)malloc(j * sizeof(int));
+    for (i = 0; i < j; i++)
         filesIndex[i] = i;
 
-    Output(filesName, filesSize, filesIndex, count, 1);
+    Output(filesName, filesSize, filesIndex, j, 1);
 
     do
     {
-        TypeSort(&typeOfSort, &ascDescType);
-        if (typeOfSort == 0) return;
+        Menu(&method);
+        if (method == 0) return;
 
-        tmpSizes = (ULONGLONG*)malloc(count * sizeof(ULONGLONG));           // Выделение доп. памяти для
-        for (i = 0; i < count; i++)                                         // сохранения и изменения размеров файлов
+        tmpSizes = (ULONGLONG*)malloc(j * sizeof(ULONGLONG));           // Выделение доп. памяти для
+        for (i = 0; i < j; i++)                                         // сохранения и изменения размеров файлов
             tmpSizes[i] = filesSize[i];
 
-        printf("\n Starting...\n Type of sort - %d.", typeOfSort);
+        printf("\n Starting...\n Type of sort - %d.", method);
         start = clock();
 
-        switch (typeOfSort)
+        switch (method)
         {
         case 1:
-            BubbleSort(tmpSizes, filesIndex, count);
+            BubbleSort(tmpSizes, filesIndex, j);
             break;
         case 2:
-            InsertionSort(tmpSizes, filesIndex, count);
+            InsertionSort(tmpSizes, filesIndex, j);
             break;
         case 3:
-            SelectionSort(tmpSizes, filesIndex, count);
+            SelectionSort(tmpSizes, filesIndex, j);
             break;
         case 4:
-            CountingSort(tmpSizes, filesIndex, count);
+            CountingSort(tmpSizes, filesIndex, j);
             break;
         case 5:
-            QuickSort(tmpSizes, filesIndex, 0, (count - 1));
+            QuickSort(tmpSizes, filesIndex, 0, (j - 1));
             break;
         case 6:
-            QuickSort(tmpSizes, filesIndex, 0, (count - 1));
+            QuickSort(tmpSizes, filesIndex, 0, (j - 1));
             break;
         }
 
-        finish = clock();
+        end = clock();
 
-        Output(filesName, filesSize, filesIndex, count);
+        Output(filesName, filesSize, filesIndex, j);
         
-        printf("\n Time: %.4lf sec.\n", (double)(finish - start) / CLOCKS_PER_SEC);
+        printf("\n Time: %.4lf sec.\n", (double)(end - start) / CLOCKS_PER_SEC);
 
-        for (i = 0; i < count; i++)         // Возвращение прежних индексов для новой сортировки
+        for (i = 0; i < j; i++)         // Возвращение прежних индексов для новой сортировки
             filesIndex[i] = i;
-        start = finish = 0;
+        start = end = 0;
         free(tmpSizes);
     } while (1);
 }
