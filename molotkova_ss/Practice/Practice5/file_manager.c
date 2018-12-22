@@ -1,316 +1,340 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <windows.h>
-#define MAX_LEN 100
- 
-#define SIZE 10
-int choose_pivot(int i,int j );
-void quicksort(int *a,int m,int n);
-void swap(int *x,int *y);
-void selection_sort(int* a, const int n);
-void display(int *a,int size);
-void insertion_sort(int *a,const int size);
 
-void merge(int *a, int *tmp, int left, int mid, int right);
-void msort(int *a, int *tmp, int left, int right);
-void merge_sort(int *a, int *tmp, const int size);
 
-void buble_sort(int *a, const int n);
+#define SIZE_OF_BUFFER 2048 //максимльная длина строки
 
-void counting_sort(int *a, const int size);
-//ОСНОВНАЯ ФУНКЦИЯ 
-void main()
+void Input(wchar_t **sDir)                                       
 {
- 
-    int* a;//ДАН МАССИВ из 10 элементов(size) динамический
-	a = (int*)malloc(SIZE);
-	int method;
-    int i=0;// ввели i 
-	int* tmp;
-	tmp = (int*)malloc(SIZE);
-	for (i=0; i<SIZE; i++)
-		a[i]=SIZE-i;
-    //printf("The array before sorting:\n"); // вывод до сортировки
-    char* b = (char*)malloc(MAX_LEN);
-	wchar_t* ca = (wchar_t*)malloc(MAX_LEN);
-	fgets(b, MAX_LEN, stdin);
-	a[strlen(b) - 1] = '\0' ;
-	swprintf( ca, MAX_LEN, L"%hs" ,b);
-    ListDirectoryContents(ca);
-	//display(a,SIZE); //вызов функции вывода на экран
-	printf (" Select sort: \n1. Selection sort \n2. Quicksort \n3. Insertion sort \n4. Merge sort \n5. Buble sort \n6. Counting sort \n"); 
-    scanf ("%d", &method); 
-	switch (method) {
-	     case 1 : selection_sort(a,SIZE);
-			 break;
-		 case 2 : quicksort(a,0, SIZE-1);
-			 break;
-		 case 3 : insertion_sort(a, SIZE);
-			 break;
-		 case 4 :  merge_sort(a, tmp, SIZE);
-			 break;
-		 case 5 : buble_sort(a, SIZE);
-			 break;
-		// case 6 : counting_sort(a, SIZE);
-		//	 break;
-	}
-	//selection_sort(a,SIZE); //вызов функции сортировки выбором
- 
-    printf("The array after sorting:\n"); //вывод после сортировки
-    display(a,SIZE); //вызов функции вывода на экран
-}
- 
-/*
-    swap two integers
-*/
-void swap(int *x,int *y)
-{
-    int temp;
- 
-    temp = *x;
-    *x = *y;
-    *y = temp;
-}
-/*
-    selection sort
-*/
-void selection_sort(int *a,const int size)//требуется сам массив и его размер
-{
-    int i, j, min;
- 
-    for (i = 0; i < size - 1; i++)
-    {
-        min = i;
-        for (j = i + 1; j < size; j++)
-        {
-            if (a[j] < a[min])
-            {
-                min = j;
-            }
-        }
-        swap(&a[i], &a[min]);
-    }
+    char *vvodstring;
+
+    *sDir = (wchar_t*)malloc(SIZE_OF_BUFFER * sizeof(wchar_t)); //выделение памяти
+    vvodstring = (char*)malloc(SIZE_OF_BUFFER * sizeof(char));
+
+    fgets(vvodstring, SIZE_OF_BUFFER, stdin);
+    vvodstring[strlen(vvodstring) - 1] = '\0';                    
+
+    swprintf(*sDir, SIZE_OF_BUFFER, L"%hs", vvodstring);
 }
 
-void display(int *a,const int size) // выводит на экран элементы  int массива размера до константы size
+void Output(wchar_t **filesName, ULONGLONG *filesSize, int *filesIndex, int N,
+    int ascDescType)
 {
     int i;
-    for(i=0; i<size; i++)
-        printf("%d ",a[i]);
-    printf("\n");
+
+    printf("\n Folder contents:\n");
+
+    if (ascDescType == 1)
+        for (i = 0; i < N; i++)
+            wprintf(L" %d. File: %s Size: %lld bytes\n", i + 1, filesName[filesIndex[i]], filesSize[filesIndex[i]]);
+    else
+        for (i = N; i > 0; i--)
+            wprintf(L" %d. File: %s Size: %lld bytes\n", N - i + 1, filesName[filesIndex[i - 1]], filesSize[filesIndex[i - 1]]);
 }
-int choose_pivot(int i,int j )// функкция для быстрой сортировки
+int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *filesSize)
 {
-    return((i+j) /2);
-}
- 
-void quicksort(int *a,int m,int n) //сам массив и ???
-{
-    int key,i,j,k;
-    if( m < n)
+    WIN32_FIND_DATA fdFile;
+    HANDLE hFind = NULL;
+    wchar_t *sPath;
+    int j = 0;
+
+    sPath = (wchar_t*)malloc(SIZE_OF_BUFFER * sizeof(wchar_t));
+    wsprintf(sPath, L"%s\\*.*", sDir);
+
+    if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE)
     {
-        k = choose_pivot(m,n);
-        swap(&a[m],&a[k]);
-        key = a[m];
-        i = m+1;
-        j = n;
-        while(i <= j)
+        wprintf(L"Path not found: [%s].\n", sDir);
+        return -1;
+    }
+
+    do
+    {
+        if (wcscmp(fdFile.cFileName, L".") != 0 && wcscmp(fdFile.cFileName, L"..") != 0)
         {
-            while((i <= n) && (a[i] <= key))
-                i++;
-            while((j >= m) && (a[j] > key))
-                j--;
-            if( i < j)
-                swap(&a[i],&a[j]);
+            ULONGLONG fileSize = fdFile.nFileSizeHigh;
+            fileSize <<= sizeof(fdFile.nFileSizeHigh) * 8;
+            fileSize |= fdFile.nFileSizeLow;
+            filesSize[count] = fileSize;
+
+            filesName[count] = (wchar_t*)malloc(SIZE_OF_BUFFER * sizeof(wchar_t));
+            wsprintf(sPath, L"%s\\%s", sDir, fdFile.cFileName);
+            wsprintf(filesName[count++], L"%s", sPath);
         }
-        /* swap two elements */
-        swap(&a[m],&a[j]);
- 
-        /* recursively sort the lesser list */
-        quicksort(a,m,j-1);
-        quicksort(a,j+1,n);
-    }
+    } while (FindNextFile(hFind, &fdFile));
+
+    FindClose(hFind);
+    return j;
 }
-void insertion_sort(int *a,const int size)
+void Menu(int *tSort)// tSort тип сортировки а второе это возраст или убыв,что мне не надо
+	
 {
- 
-    int i,j, k;
-    for (i = 1; i < size; ++i)
+    do
     {
-        k = a[i];
-        j = i - 1;
-        while ((j >= 0) && (k < a[j]))
+         printf("\n Choose the type of sorting:\n 1. BubbleSort\n 2. InsertionSort\n "
+            "3. SelectionSort\n 4. CountingSort\n "
+            "5. QuickSort\n 6. MergeSort\n"
+            "7.Close the program: ");
+        scanf("%d", tSort);
+    } while ((*tSort < 0) || (*tSort > 7));
+}
+void swap_int(int *var1, int *var2)
+{
+    int tmp = *var1;
+    *var2 = (*var1 = *var2, tmp);
+}
+void swap_ULONGLONG(ULONGLONG *var1, ULONGLONG *var2)
+{
+    ULONGLONG tmp = *var1;
+    *var2 = (*var1 = *var2, tmp);
+}
+void QuickSplit(ULONGLONG *filesSize, int *i, int *j, int mid, int *filesIndex)
+{
+    do
+    {
+        while (filesSize[*i] < mid)
+            (*i)++;
+        while (filesSize[*j] > mid)
+            (*j)--;
+
+        if (*i <= *j)
         {
-            a[j + 1] = a[j];
-            --j;
+            Swap_ULONGLONG(&(filesSize[*i]), &(filesSize[*j]));
+            Swap_Ulong(&(filesIndex[*i]), &(filesIndex[*j]));
+
+            (*i)++;
+            (*j)--;
         }
-        a[j + 1] = k;
-    }
+    } while (*i <= *j);
 }
-void merge_sort(int *a, int *tmp, const int size)
+
+void Merge(ULONGLONG *filesSize, int *filesIndex, int first, int midIndex, int last)
 {
-    msort(a, tmp, 0, size - 1);
-}
- 
-void msort(int *a, int *tmp, int left, int right)
-{
-    int mid;
-    if (right > left)
-    {
-        mid = (right + left) / 2;
-        msort(a, tmp, left, mid);
-        msort(a, tmp, mid + 1, right);
-        merge(a, tmp, left, mid + 1, right);
-    }
-}
- 
-void merge(int *a, int *tmp, int left, int mid, int right)
-{
-    int i, left_end, count, tmp_pos;
-    left_end = mid - 1;
-    tmp_pos = left;
-    count = right - left + 1;
- 
-    while ((left <= left_end) && (mid <= right))
-    {
-        if (a[left] <= a[mid])
+    int i = first, j = midIndex + 1, step;
+    int *tmpIndex = (int*)malloc((last - first + 1) * sizeof(int));
+    ULONGLONG *tmp = (ULONGLONG*)malloc((last - first + 1) * sizeof(ULONGLONG));
+
+    for (step = 0; step < last - first + 1; step++)
+        if ((j > last) || ((i <= midIndex) && (filesSize[i] < filesSize[j])))
         {
-            tmp[tmp_pos] = a[left];
-            tmp_pos = tmp_pos + 1;
-            left = left +1;
+            tmp[step] = filesSize[i];
+            tmpIndex[step] = filesIndex[i++];
         }
         else
         {
-            tmp[tmp_pos] = a[mid];
-            tmp_pos = tmp_pos + 1;
-            mid = mid + 1;
+            tmp[step] = filesSize[j];
+            tmpIndex[step] = filesIndex[j++];
         }
-    }
- 
-    while (left <= left_end)
-    {
-        tmp[tmp_pos] = a[left];
-        left = left + 1;
-        tmp_pos = tmp_pos + 1;
-    }
-    while (mid <= right)
-    {
-        tmp[tmp_pos] = a[mid];
-        mid = mid + 1;
-        tmp_pos = tmp_pos + 1;
-    }
- 
-    for (i = 0; i <= count; i++)
-    {
-        a[right] = tmp[right];
-        right = right - 1;
-    }
-}
-void buble_sort(int *a,const int size)
-{
-    int i,j;
-    for(i=0; i<(size-1); i++)
-    {
-        for(j=0; j<(size-(i+1)); j++)
-        {
-            {
-                if(a[j] > a[j+1])
-                    swap(&a[j],&a[j+1]);
-            }
- 
-        }
-    }
-}
-/*void counting_sort(int *a, const int size)
-{
-     int a[SIZE]={0},i,j;
-     
-     for(i=0;i<size;++i)
-      a[a[i]]=a[a[i]]+1;
-      
-     printf("\nSorted elements are:");
-     
-     for(i=0;i<=size;++i)
-      for(j=1;j<=a[i];++j)
-       printf("%d ",i); */
-int ListDirectoryContents(const wchar_t *sDir)
-{ 
-    WIN32_FIND_DATA fdFile; 
-    HANDLE hFind = NULL; 
-    wchar_t sPath[2048]; 
 
-    wsprintf(sPath, L"%s\\*.*", sDir); 
-    if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE) 
-    { 
-        wprintf(L"Path not found: [%s]\n", sDir); 
-        return 1; 
-    } 
+    for (step = first; step < last + 1; step++)
+    {
+        filesSize[step] = tmp[step - first];
+        filesIndex[step] = tmpIndex[step - first];
+    }
+
+    free(tmp);
+    free(tmpIndex);
+}
+
+void BubbleSort(ULONGLONG *filesSize, int *filesIndex, int N)
+{
+    int i, j;
+
+    for (i = 0; i < N; i++)
+        for (j = N - 1; j > i; j--)
+        {
+            if (filesSize[j - 1] > filesSize[j])
+            {
+                Swap_ULONGLONG(&filesSize[j - 1], &filesSize[j]);
+                Swap_Ulong(&filesIndex[j - 1], &filesIndex[j]);
+            }
+        }
+}
+
+void InsertionSort(ULONGLONG *filesSize, int *filesIndex, int N)
+{
+    int i, j, tmpIndex;
+    ULONGLONG tmp;
+
+    for (i = 1; i < N; i++)
+    {
+        tmp = filesSize[i];
+        tmpIndex = filesIndex[i];
+        j = i - 1;
+
+        while ((j >= 0) && (filesSize[j] > tmp))
+        {
+            filesSize[j + 1] = filesSize[j];
+            filesIndex[j + 1] = filesIndex[j];
+            j--;
+        }
+
+        filesSize[j + 1] = tmp;
+        filesIndex[j + 1] = tmpIndex;
+    }
+}
+
+void SelectionSort(ULONGLONG *filesSize, int *filesIndex, int N)
+{
+    int i, j, keyIndex, keyNewIndex;
+    ULONGLONG key;
+
+    for (i = 0; i < N; i++)
+    {
+        key = filesSize[i];
+        keyIndex = i;
+        keyNewIndex = filesIndex[i];
+
+        for (j = i + 1; j < N; j++)
+        {
+            if (filesSize[j] < key)
+            {
+                key = filesSize[j];
+                keyIndex = j;
+            }
+        }
+
+        Swap_ULONGLONG(&filesSize[keyIndex], &filesSize[i]);
+        Swap_Ulong(&filesIndex[i], &filesIndex[keyIndex]);
+    }
+}
+
+void CountingSort(ULONGLONG *filesSize, int *filesIndex, int N)
+{
+    int i = 0, j = 0, index = 0, diff = 0, k = 0;
+    int *fileIndex;
+    ULONGLONG **count, min, max;
+
+    min = max = filesSize[0];
+
+    for (i = 0; i < N; i++)
+    {
+        if (filesSize[i] < min)
+            min = filesSize[i];
+        if (filesSize[i] > max)
+            max = filesSize[i];
+    }
+
+    diff = max - min + 1;
+    count = (ULONGLONG**)malloc(diff * sizeof(ULONGLONG*));
+    for (i = 0; i < diff; i++)
+        count[i] = (ULONGLONG*)malloc(MIN_REPEAT_FILES * sizeof(ULONGLONG));
+    for (i = 0; i < diff; i++)
+        for (j = 0; j < MIN_REPEAT_FILES; j++)
+            count[i][j] = 0;
+
+    for (i = 0; i < N; i++)
+    {
+        count[filesSize[i] - min][0]++;
+        count[filesSize[i] - min][(int)count[filesSize[i] - min][0]] = filesIndex[i];
+    }
+
+    for (i = 0; i < diff; i++)
+        for (j = 0; j < (count[i][0] + 1); j++)
+            if (j!= 0) filesIndex[k++] = count[i][j];
+
+    free(count);
+}
+
+void QuickSort(ULONGLONG *filesSize, int *filesIndex, int first, int last)
+{
+    int midIndex, i = first, j = last;
+
+    midIndex = (first + last) / 2;
+
+    QuickSplit(filesSize, &i, &j, filesSize[midIndex], filesIndex);
+
+    if (j > first)
+        QuickSort(filesSize, filesIndex, first, j);
+    if (i < last)
+        QuickSort(filesSize, filesIndex, i, last);
+}
+
+void MergeSort(ULONGLONG *filesSize, int *filesIndex, int first, int last)
+{
+    int midIndex = (last + first) / 2;
+
+    if (first >= last)
+        return;
+
+    MergeSort(filesSize, filesIndex, first, midIndex);
+    MergeSort(filesSize, filesIndex, midIndex + 1, last);
+    Merge(filesSize, filesIndex, first, midIndex, last);
+}   
+
+
+
+void main()
+{
+    wchar_t *filesPath, **filesName;
+    ULONGLONG *filesSize, *tmpSizes;
+    clock_t start, end;
+    int *filesIndex;
+    int count = -1, i = 0;
+    int typeOfSort = 0,f = 0;
+
+    filesName = (wchar_t**)malloc(MAX_COUNT_OF_FILES * sizeof(wchar_t*));
+    filesSize = (ULONGLONG*)malloc(MAX_COUNT_OF_FILES * sizeof(ULONGLONG));
+
+    printf("\t\t\t\tFile Manager");
+    printf("\n\tWay to the folder:");
+
+    while (count == -1)
+    {
+        InputDirectory(&filesPath);
+        count = ListDirectoryContents(filesPath, filesName, filesSize);
+    }
+
+    filesIndex = (int*)malloc(count * sizeof(int));
+    for (i = 0; i < count; i++)
+        filesIndex[i] = i;
+
+    Output(filesName, filesSize, filesIndex, count, 1);
 
     do
-    { 
-        if (wcscmp(fdFile.cFileName, L".") != 0  && wcscmp(fdFile.cFileName, L"..") != 0) 
-        {
-            ULONGLONG fileSize = fdFile.nFileSizeHigh;
-            fileSize <<= sizeof(fdFile.nFileSizeHigh) * 8; 
-            fileSize |= fdFile.nFileSizeLow;
+    {
+        TypeSort(&typeOfSort, &ascDescType);
+        if (typeOfSort == 0) return;
 
-            wsprintf(sPath, L"%s\\%s", sDir, fdFile.cFileName);
-            wprintf(L"File: %s Size: %d\n", sPath, fileSize); 
+        tmpSizes = (ULONGLONG*)malloc(count * sizeof(ULONGLONG));           // Выделение доп. памяти для
+        for (i = 0; i < count; i++)                                         // сохранения и изменения размеров файлов
+            tmpSizes[i] = filesSize[i];
+
+        printf("\n Starting...\n Type of sort - %d.", typeOfSort);
+        start = clock();
+
+        switch (typeOfSort)
+        {
+        case 1:
+            BubbleSort(tmpSizes, filesIndex, count);
+            break;
+        case 2:
+            InsertionSort(tmpSizes, filesIndex, count);
+            break;
+        case 3:
+            SelectionSort(tmpSizes, filesIndex, count);
+            break;
+        case 4:
+            CountingSort(tmpSizes, filesIndex, count);
+            break;
+        case 5:
+            QuickSort(tmpSizes, filesIndex, 0, (count - 1));
+            break;
+        case 6:
+            QuickSort(tmpSizes, filesIndex, 0, (count - 1));
+            break;
         }
-    } 
-    while(FindNextFile(hFind, &fdFile));
-    FindClose(hFind);
-    return 0; 
-} 
- счетчик
- #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include<windows.h>
- 
-int main ()
-{
-    double start, finish;
-    int nums[10000];
-    int a, b, t;
-    int size;
- 
-    size = 10000;
-    srand(time(NULL));
-    for(t=0; t<size; t++) nums[t] = rand() % 100;
- 
-   printf("First massive:\n");
-   for(t=0; t<size; t++) printf("%d ", nums[t]);
-   printf("\n");
- 
-   /*!!!*/ start = GetTickCount();
-    /*Пузырьковый метод*/
-    for(a=1; a<size; a++)
-        for(b=size-1; b>=a; b--) {
-            if(nums[b-1]>nums[b]) {
-                t = nums[b-1];
-                nums[b-1] = nums[b];
-                nums[b] = t;
-            }
-        }
-    /*--------------------------*/
-     /*!!!*/   finish = GetTickCount();
- 
-    for(t=0; t<size; t++) printf("%d ", nums[t]);
-    printf("\nSeconds: %.15f\n", finish - start);
- 
-    return 0;
+
+        finish = clock();
+
+        Output(filesName, filesSize, filesIndex, count);
+        
+        printf("\n Time: %.4lf sec.\n", (double)(finish - start) / CLOCKS_PER_SEC);
+
+        for (i = 0; i < count; i++)         // Возвращение прежних индексов для новой сортировки
+            filesIndex[i] = i;
+        start = finish = 0;
+        free(tmpSizes);
+    } while (1);
 }
-#include <stdio.h>
-#include <time.h>
-int main(void)
-{
-clock_t start, stop;
-unsigned long t;
-start = clock ();
-for (t=0; t<500000L; t + +);
-stop = clock();
-printf("Loop required %f seconds", (stop - start) / CLK_TCK);
-return 0;
-} 
-через clock_t
