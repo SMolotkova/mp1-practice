@@ -3,7 +3,7 @@
 #include <time.h>
 #include <windows.h>
 #define MIN_REPEAT_FILES 31
-#define MAX_COUNT_OF_FILES 50000
+#define MAX_COUNT_OF_FILES 50000 // масимальное число файлов
 #define SIZE_OF_BUFFER 2048 //максимльная длина строки
 
 void Input(wchar_t **sDir)                                       
@@ -62,7 +62,7 @@ int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *f
     FindClose(hFind);
     return j;
 }
-void Menu(int *tSort)// 
+void Menu(int *method)// 
 	
 {
     do
@@ -71,18 +71,18 @@ void Menu(int *tSort)//
             "3. SelectionSort\n 4. CountingSort\n "
             "5. QuickSort\n 6. MergeSort\n"
             "7.Close the program: ");
-        scanf("%d", tSort);
-    } while ((*tSort < 0) || (*tSort > 7));
+        scanf("%d", method);
+    } while ((*method < 0) || (*method > 7));
 }
-void swap_int(int *var1, int *var2)
+void swap_int(int *z, int *k)
 {
-    int tmp = *var1;
-    *var2 = (*var1 = *var2, tmp);
+    int tmp = *z;
+    *k = (*z = *k, tmp);
 }
-void swap_ULONGLONG(ULONGLONG *var1, ULONGLONG *var2)
+void swap_ULONGLONG(ULONGLONG *z, ULONGLONG *k)
 {
-    ULONGLONG tmp = *var1;
-    *var2 = (*var1 = *var2, tmp);
+    ULONGLONG tmp = *z;
+    *k = (*z = *k, tmp);
 }
 void QuickSplit(ULONGLONG *filesSize, int *i, int *j, int mid, int *filesIndex)
 {
@@ -106,26 +106,26 @@ void QuickSplit(ULONGLONG *filesSize, int *i, int *j, int mid, int *filesIndex)
 
 void Merge(ULONGLONG *filesSize, int *filesIndex, int first, int midIndex, int last)
 {
-    int i = first, j = midIndex + 1, step;
+    int i = first, j = midIndex + 1, it;
     int *tmpIndex = (int*)malloc((last - first + 1) * sizeof(int));
     ULONGLONG *tmp = (ULONGLONG*)malloc((last - first + 1) * sizeof(ULONGLONG));
 
-    for (step = 0; step < last - first + 1; step++)
+    for (it = 0; it < last - first + 1; it++)
         if ((j > last) || ((i <= midIndex) && (filesSize[i] < filesSize[j])))
         {
-            tmp[step] = filesSize[i];
-            tmpIndex[step] = filesIndex[i++];
+            tmp[it] = filesSize[i];
+            tmpIndex[it] = filesIndex[i++];
         }
         else
         {
-            tmp[step] = filesSize[j];
-            tmpIndex[step] = filesIndex[j++];
+            tmp[it] = filesSize[j];
+            tmpIndex[it] = filesIndex[j++];
         }
 
-    for (step = first; step < last + 1; step++)
+    for (it = first; it < last + 1; it++)
     {
-        filesSize[step] = tmp[step - first];
-        filesIndex[step] = tmpIndex[step - first];
+        filesSize[it] = tmp[it - first];
+        filesIndex[it] = tmpIndex[it - first];
     }
 
     free(tmp);
@@ -171,27 +171,27 @@ void InsertionSort(ULONGLONG *filesSize, int *filesIndex, int N)
 }
 
 void SelectionSort(ULONGLONG *filesSize, int *filesIndex, int N)
-{
-    int i, j, keyIndex, keyNewIndex;
-    ULONGLONG key;
+{   // v- выбранный
+    int i, j, vIndex, vNewIndex;
+    ULONGLONG v;
 
     for (i = 0; i < N; i++)
     {
-        key = filesSize[i];
-        keyIndex = i;
-        keyNewIndex = filesIndex[i];
+        v = filesSize[i];
+        vIndex = i;
+        vNewIndex = filesIndex[i];
 
         for (j = i + 1; j < N; j++)
         {
             if (filesSize[j] < key)
             {
-                key = filesSize[j];
-                keyIndex = j;
+                v = filesSize[j];
+                vIndex = j;
             }
         }
 
-        swap_ULONGLONG(&filesSize[keyIndex], &filesSize[i]);
-        swap_int(&filesIndex[i], &filesIndex[keyIndex]);
+        swap_ULONGLONG(&filesSize[vIndex], &filesSize[i]); //  обмен между размерами файлов и индексами
+        swap_int(&filesIndex[i], &filesIndex[vIndex]);
     }
 }
 
@@ -238,7 +238,7 @@ void QuickSort(ULONGLONG *filesSize, int *filesIndex, int first, int last)
 
     midIndex = (first + last) / 2;
 
-    QuickSplit(filesSize, &i, &j, filesSize[midIndex], filesIndex);
+    QuickSplit(filesSize, &i, &j, filesSize[midIndex], filesIndex); // вспомогательная функция
 
     if (j > first)
         QuickSort(filesSize, filesIndex, first, j);
@@ -246,7 +246,7 @@ void QuickSort(ULONGLONG *filesSize, int *filesIndex, int first, int last)
         QuickSort(filesSize, filesIndex, i, last);
 }
 
-void MergeSort(ULONGLONG *filesSize, int *filesIndex, int first, int last)
+void MergeSort(ULONGLONG *filesSize, int *filesIndex, int first, int last) 
 {
     int midIndex = (last + first) / 2;
 
@@ -255,7 +255,7 @@ void MergeSort(ULONGLONG *filesSize, int *filesIndex, int first, int last)
 
     MergeSort(filesSize, filesIndex, first, midIndex);
     MergeSort(filesSize, filesIndex, midIndex + 1, last);
-    Merge(filesSize, filesIndex, first, midIndex, last);
+    Merge(filesSize, filesIndex, first, midIndex, last); //вызов дополнительной функции
 }   
 
 
@@ -317,7 +317,7 @@ void main()
             QuickSort(tmpSizes, filesIndex, 0, (j - 1));
             break;
         case 6:
-            QuickSort(tmpSizes, filesIndex, 0, (j - 1));
+            MergeSort(tmpSizes, filesIndex, 0, (j - 1));
             break;
         }
 
