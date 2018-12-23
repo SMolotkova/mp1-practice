@@ -2,21 +2,21 @@
 #include <stdlib.h>
 #include <time.h>
 #include <windows.h>
-#define MIN_REPEAT_FILES 31
-#define MAX_COUNT_OF_FILES 50000 // масимальное число файлов
-#define SIZE_OF_BUFFER 2048 //максимльная длина строки
+#define REP 45
+#define FILES 50000 // масимальное число файлов
+#define BUFFER 2048 //максимльная длина строки
 
 void Input(wchar_t **sDir)                                       
 {
     char *vvodstring;
 
-    *sDir = (wchar_t*)malloc(SIZE_OF_BUFFER * sizeof(wchar_t)); //выделение памяти
-    vvodstring = (char*)malloc(SIZE_OF_BUFFER * sizeof(char));
+    *sDir = (wchar_t*)malloc(SBUFFER * sizeof(wchar_t)); //выделение памяти
+    vvodstring = (char*)malloc(BUFFER * sizeof(char));
 
     fgets(vvodstring, SIZE_OF_BUFFER, stdin);
     vvodstring[strlen(vvodstring) - 1] = '\0';                    
 
-    swprintf(*sDir, SIZE_OF_BUFFER, L"%hs", vvodstring);
+    swprintf(*sDir, BUFFER, L"%hs", vvodstring);
 }
 
 void Output(wchar_t **filesName, ULONGLONG *filesSize, int *filesIndex, int N)
@@ -35,7 +35,7 @@ int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *f
     wchar_t *sPath;
     int j = 0;
 
-    sPath = (wchar_t*)malloc(SIZE_OF_BUFFER * sizeof(wchar_t));
+    sPath = (wchar_t*)malloc(BUFFER * sizeof(wchar_t));
     wsprintf(sPath, L"%s\\*.*", sDir);
 
     if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE)
@@ -53,7 +53,7 @@ int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *f
             fileSize |= fdFile.nFileSizeLow;
             filesSize[j] = fileSize;
 
-            filesName[j] = (wchar_t*)malloc(SIZE_OF_BUFFER * sizeof(wchar_t));
+            filesName[j] = (wchar_t*)malloc(BUFFER * sizeof(wchar_t));
             wsprintf(sPath, L"%s\\%s", sDir, fdFile.cFileName);
             wsprintf(filesName[j++], L"%s", sPath);
         }
@@ -69,8 +69,7 @@ void Menu(int *method)//
     {
          printf("\n Choose the type of sorting:\n 1. BubbleSort\n 2. InsertionSort\n "
             "3. SelectionSort\n 4. CountingSort\n "
-            "5. QuickSort\n 6. MergeSort\n"
-            "7.Close the program: ");
+            "5. QuickSort\n 6. MergeSort\n7.Close the program: ");
         scanf("%d", method);
     } while ((*method < 0) || (*method > 7));
 }
@@ -214,9 +213,9 @@ void CountingSort(ULONGLONG *filesSize, int *filesIndex, int N)
     diff = max - min + 1;
     count = (ULONGLONG**)malloc(diff * sizeof(ULONGLONG*));
     for (i = 0; i < diff; i++)
-        count[i] = (ULONGLONG*)malloc(MIN_REPEAT_FILES * sizeof(ULONGLONG));
+        count[i] = (ULONGLONG*)malloc(REP * sizeof(ULONGLONG));
     for (i = 0; i < diff; i++)
-        for (j = 0; j < MIN_REPEAT_FILES; j++)
+        for (j = 0; j < REP; j++)
             count[i][j] = 0;
 
     for (i = 0; i < N; i++)
@@ -269,8 +268,8 @@ void main()
     int j = -1, i = 0;
     int method = 0,f = 0;
 
-    filesName = (wchar_t**)malloc(MAX_COUNT_OF_FILES * sizeof(wchar_t*));
-    filesSize = (ULONGLONG*)malloc(MAX_COUNT_OF_FILES * sizeof(ULONGLONG));
+    filesName = (wchar_t**)malloc(FILES * sizeof(wchar_t*));
+    filesSize = (ULONGLONG*)malloc(FILES * sizeof(ULONGLONG));
 
     printf("\t\t\t\tFile Manager");
     printf("\n\tWay to the folder:");
@@ -292,8 +291,8 @@ void main()
         Menu(&method);
         if (method == 0) return;
 
-        tmpSizes = (ULONGLONG*)malloc(j * sizeof(ULONGLONG));           // Выделение доп. памяти для
-        for (i = 0; i < j; i++)                                         // сохранения и изменения размеров файлов
+        tmpSizes = (ULONGLONG*)malloc(j * sizeof(ULONGLONG));           
+        for (i = 0; i < j; i++)                                    
             tmpSizes[i] = filesSize[i];
 
         printf("\n Starting...\n Type of sort - %d.", method);
@@ -327,7 +326,7 @@ void main()
         
         printf("\n Time: %.4lf sec.\n", (double)(end - start) / CLOCKS_PER_SEC);
 
-        for (i = 0; i < j; i++)         // Возвращение прежних индексов для новой сортировки
+        for (i = 0; i < j; i++)         
             filesIndex[i] = i;
         start = end = 0;
         free(tmpSizes);
