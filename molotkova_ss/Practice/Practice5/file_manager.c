@@ -62,7 +62,7 @@ int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *f
     FindClose(hFind);
     return j;
 }
-void Menu(int *tSort)// tSort тип сортировки а второе это возраст или убыв,что мне не надо
+void Menu(int *tSort)// 
 	
 {
     do
