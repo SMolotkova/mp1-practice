@@ -6,39 +6,55 @@
 #define FILES 50000 // масимальное число файлов
 #define BUFFER 2048 //максимльная длина строки
 
-void Input(wchar_t **sDir)                                       
+
+void Menu(int *method)// Функция меню (показывает сортировки, осуществялет ввод переменной,определяющий метод сортировки)
+{
+    do
+    {
+         printf("\n Choose the type of sorting:\n 1. BubbleSort\n 2. InsertionSort\n "
+            "3. SelectionSort\n 4. CountingSort\n "
+            "5. QuickSort\n 6. MergeSort\n7.Close the program: ");
+        scanf("%d", method);//пользователь определяет алгоритм
+    } while ((*method < 0) || (*method > 7));//условие проверки
+}
+                                           /***работа с файлами****/
+
+void Input(wchar_t **sDir)  // Функция ввода (запишем в sDir путь до директории,это массив)   
+//ПОСТУПАЮЩИЕ ЗНАЧЕНИЯ - массив	
 {
     char *vvodstring;
 
     *sDir = (wchar_t*)malloc(SBUFFER * sizeof(wchar_t)); //выделение памяти
-    vvodstring = (char*)malloc(BUFFER * sizeof(char));
+    vvodstring = (char*)malloc(BUFFER * sizeof(char)); // выделение памяти для массива, в который поместим путь
 
-    fgets(vvodstring, SIZE_OF_BUFFER, stdin);
-    vvodstring[strlen(vvodstring) - 1] = '\0';                    
+    fgets(vvodstring, BUFFER, stdin); // принимает :указатель на массив, в который будет помещена считанная строка, максимально допустимая длинна считываемой строки, потом ввода
+    vvodstring[strlen(vvodstring) - 1] = '\0';  // убираем ноль в коцнце                  
 
-    swprintf(*sDir, BUFFER, L"%hs", vvodstring);
+    swprintf(*sDir, BUFFER, L"%hs", vvodstring); //запись форматированного вывода: указатель на строку, максимальная длинна строки, строка
 }
 
-void Output(wchar_t **filesName, ULONGLONG *filesSize, int *filesIndex, int N)
+void Output(wchar_t **filesName, ULONGLONG *filesSize, int *filesIndex, int N) // Функция вывода (выводит список файлов с размерами)
+//ПОСТУПАЮЩИЕ ЗНАЧЕНИЯ - массив с именами файлов из папки, размеры файлов из папки, индексы файлов, N- количество файлов из заданной папки
 {
-    int i;
+    int i; // счетчик для вывода
 
     printf("\n Folder contents:\n");
 
         for (i = 0; i < N; i++)
-            wprintf(L" %d. File: %s Size: %lld bytes\n", i + 1, filesName[filesIndex[i]], filesSize[filesIndex[i]]);
+            wprintf(L" %d. File: %s Size: %lld bytes\n", i + 1, filesName[filesIndex[i]], filesSize[filesIndex[i]]); //нумерация,имя файла,размер
 }
-int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *filesSize)
+int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *filesSize) //Функция содержания (запись файлов в каталоге(имена+размеры)
+//ПОСТУПАЮЩИЕ ЗНАЧЕНИЯ - путь до директории, имена,размеры
 {
     WIN32_FIND_DATA fdFile;
-    HANDLE hFind = NULL;
-    wchar_t *sPath;
-    int j = 0;
+    HANDLE hFind = NULL; //первое-декскриптор объекта, в данном случае файла
+    wchar_t *sPath; //буфер
+    int j = 0;//количество файлов
 
-    sPath = (wchar_t*)malloc(BUFFER * sizeof(wchar_t));
-    wsprintf(sPath, L"%s\\*.*", sDir);
+    sPath = (wchar_t*)malloc(BUFFER * sizeof(wchar_t)); //выделение памяти
+    wsprintf(sPath, L"%s\\*.*", sDir); //буфер,формат,аргумент
 
-    if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE)
+    if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE) //проверка на правильность ввода
     {
         wprintf(L"Path not found: [%s].\n", sDir);
         return -1;
@@ -53,43 +69,158 @@ int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *f
             fileSize |= fdFile.nFileSizeLow;
             filesSize[j] = fileSize;
 
-            filesName[j] = (wchar_t*)malloc(BUFFER * sizeof(wchar_t));
-            wsprintf(sPath, L"%s\\%s", sDir, fdFile.cFileName);
-            wsprintf(filesName[j++], L"%s", sPath);
+            filesName[j] = (wchar_t*)malloc(BUFFER * sizeof(wchar_t));//выделяем память
+            wsprintf(sPath, L"%s\\%s", sDir, fdFile.cFileName);//вывод
+            wsprintf(filesName[j++], L"%s", sPath);//вывод
         }
     } while (FindNextFile(hFind, &fdFile));
 
     FindClose(hFind);
-    return j;
+    return j; //количество файлов созранено
 }
-void Menu(int *method)// 
-	
+//ПОСТУПАЮЩИЕ ЗНАЧЕНИЯ - размер файлов, индексы, их количество одинаковы(почти) для всех функций 
+
+                                                  /****функции сортировок****/
+
+//СОРТИРОВКА ПУЗЫРЬКОМ
+void BubbleSort(ULONGLONG *filesSize, int *filesIndex, int N)
 {
-    do
+    int i, j;
+    for (i = 0; i < N - 1; i++)
     {
-         printf("\n Choose the type of sorting:\n 1. BubbleSort\n 2. InsertionSort\n "
-            "3. SelectionSort\n 4. CountingSort\n "
-            "5. QuickSort\n 6. MergeSort\n7.Close the program: ");
-        scanf("%d", method);
-    } while ((*method < 0) || (*method > 7));
+        for (j = 0; j < N - i -1; j++)
+        {
+            if (filesSize[j] > filesSize[j+1]) //если один больше другого-меняем, в результате первого шага получим больший индекс
+            {
+                swap_ULONGLONG(&filesSize[j], &filesSize[j + 1]);
+                swap_int(&filesIndex[j], &filesIndex[j + 1]); //меняем связанные индексы
+            }
+        }
+    }    
 }
-void swap_int(int *z, int *k)
+//СОРТИРОВКА ВСТАВКАМИ
+void InsertionSort(ULONGLONG *filesSize, int *filesIndex, int N)
 {
-    int tmp = *z;
-    *k = (*z = *k, tmp);
+    int i, j, tmpIndex;
+    ULONGLONG tmpSize; //выбран этот тип, так как размеры файлов в нем же
+
+    for (i = 1; i < N; i++)
+    {
+        tmpIndex = filesIndex[i];
+        j = i - 1;
+
+        while ((j >= 0) && (filesSize[filesIndex[j]] > filesSize[tmpIndex]))
+        {
+            filesIndex[j + 1] = filesIndex[j];
+            j--;
+        }
+        filesIndex[j + 1] = tmpIndex;
+    }
 }
-void swap_ULONGLONG(ULONGLONG *z, ULONGLONG *k)
+//СОРТИРОВКА ВЫБОРОМ
+void SelectionSort(ULONGLONG *filesSize, int *filesIndex, int N)
+{   // v- выбранный
+    int i, j, vIndex, vNewIndex;
+    ULONGLONG v;
+
+    for (i = 0; i < N; i++)
+    {//определяемся с выбранным размером
+        v = filesSize[i];
+        vIndex = i;
+        vNewIndex = filesIndex[i];
+
+        for (j = i + 1; j < N; j++)
+        {
+            if (filesSize[j] <v)
+            {
+                v = filesSize[j];
+                vIndex = j;
+            }
+        }
+
+        swap_ULONGLONG(&filesSize[vIndex], &filesSize[i]); //  обмен между размерами файлов и связанными индексами
+        swap_int(&filesIndex[i], &filesIndex[vIndex]);
+    }
+}
+//Функции перемены значений(ПОСТУПАЮЩИЕ ЗНАЧЕНИЯ - две переменные), разделены, так как переменная для обмена будет разного типа.
+void intSwap(int *arg1, int *arg2)//функция меняет местами аргументы типа int
 {
-    ULONGLONG tmp = *z;
-    *k = (*z = *k, tmp);
+    int tmp = *arg1;//tmp- переменная для обмена
+    *arg1 = *arg2;
+    *arg2 = tmp;
 }
+void ULONGLONGSwap(ULONGLONG *a1, ULONGLONG *a2)//Функция обмена типа ULOMGLONG
+{
+    ULONGLONG tmp = *a1;//введем переменную tmp, в которую запишем значение а1
+    *a1 = *a2;//значение а2 переходит в а1
+    *a2 = tmp; //приравниваем к значению а1, которое хранилось в tmp
+}
+
+//СОРТИРОВКА ПОДСЧЕТОМ
+void CountingSort(ULONGLONG *filesSize, int *filesIndex, int N)
+{
+    int *c = (int*)malloc(FILES * sizeof(int));
+    int i, j, idx = 0, h = 0;
+    for (i = 0; i < FILES; i++)
+        c[i] = 0;
+    for (i = 0; i < N; i++)
+    {
+        if (filesSize[filesIndex[i]] > FILES)
+        {
+            printf("File size too large\n"); 
+            return;
+        }
+        c[filesSize[filesIndex[i]]]++;
+    }
+    for (i = 0; i < FILES; i++)
+    {
+        if (c[i]>0)
+        {
+            h = 0;
+            for (j = 0; j < count[i]; j++)
+            {
+                while (filesSize[h] != i)
+                    h++;
+                filesIndex[idx++] = h++;
+            }
+        }
+    }
+    free(c);
+}
+//БЫСТРАЯ СОРТИРОВКА(рекурсивная)
+void QuickSort(ULONGLONG *filesSize, int *filesIndex, int first, int last)
+{
+    int midIndex, i = first, j = last;
+
+    midIndex = (first + last) / 2;//если число надове неделиться,здесь тип инт, поэтому ответом будет не дробь. средний индекс
+
+    QuickSplit(filesSize, &i, &j, filesSize[midIndex], filesIndex); // вспомогательная функция
+
+    if (j > first)
+        QuickSort(filesSize, filesIndex, first, j);
+    if (i < last)
+        QuickSort(filesSize, filesIndex, i, last);
+}
+//СОРТИРОВКА СЛИЯНИЕМ
+void MergeSort(ULONGLONG *filesSize, int *filesIndex, int first, int last) 
+{
+    int midIndex = (last + first) / 2;
+
+    if (first >= last)
+        return;
+
+    MergeSort(filesSize, filesIndex, first, midIndex);
+    MergeSort(filesSize, filesIndex, midIndex + 1, last);//смещение индексов
+    Merge(filesSize, filesIndex, first, midIndex, last); //вызов дополнительной функции
+}   
+//Функция разделения
 void QuickSplit(ULONGLONG *filesSize, int *i, int *j, int mid, int *filesIndex)
 {
     do
     {
-        while (filesSize[*i] < mid)
+        while (filesSize[*i] < mid)//идем с начала массива  к середине
             (*i)++;
-        while (filesSize[*j] > mid)
+        while (filesSize[*j] > mid)//идем от конца к серединному элементу
             (*j)--;
 
         if (*i <= *j)
@@ -97,17 +228,17 @@ void QuickSplit(ULONGLONG *filesSize, int *i, int *j, int mid, int *filesIndex)
             swap_ULONGLONG(&(filesSize[*i]), &(filesSize[*j]));
             swap_int(&(filesIndex[*i]), &(filesIndex[*j]));
 
-            (*i)++;
+            (*i)++; //i уходит вправо, а j влево
             (*j)--;
         }
     } while (*i <= *j);
 }
-
+//вспомогательная функция для MergeSort
 void Merge(ULONGLONG *filesSize, int *filesIndex, int first, int midIndex, int last)
 {
     int i = first, j = midIndex + 1, it;
-    int *tmpIndex = (int*)malloc((last - first + 1) * sizeof(int));
-    ULONGLONG *tmp = (ULONGLONG*)malloc((last - first + 1) * sizeof(ULONGLONG));
+    int *tmpIndex = (int*)malloc((last - first + 1) * sizeof(int));//массив для индексов
+    ULONGLONG *tmp = (ULONGLONG*)malloc((last - first + 1) * sizeof(ULONGLONG));//массив для размеров
 
     for (it = 0; it < last - first + 1; it++)
         if ((j > last) || ((i <= midIndex) && (filesSize[i] < filesSize[j])))
@@ -131,145 +262,19 @@ void Merge(ULONGLONG *filesSize, int *filesIndex, int first, int midIndex, int l
     free(tmpIndex);
 }
 
-void BubbleSort(ULONGLONG *filesSize, int *filesIndex, int N)
-{
-    int i, j;
 
-    for (i = 0; i < N; i++)
-        for (j = N - 1; j > i; j--)
-        {
-            if (filesSize[j - 1] > filesSize[j])
-            {
-                swap_ULONGLONG(&filesSize[j - 1], &filesSize[j]);
-                swap_int(&filesIndex[j - 1], &filesIndex[j]);
-            }
-        }
-}
-
-void InsertionSort(ULONGLONG *filesSize, int *filesIndex, int N)
-{
-    int i, j, tmpIndex;
-    ULONGLONG tmp;
-
-    for (i = 1; i < N; i++)
-    {
-        tmp = filesSize[i];
-        tmpIndex = filesIndex[i];
-        j = i - 1;
-
-        while ((j >= 0) && (filesSize[j] > tmp))
-        {
-            filesSize[j + 1] = filesSize[j];
-            filesIndex[j + 1] = filesIndex[j];
-            j--;
-        }
-
-        filesSize[j + 1] = tmp;
-        filesIndex[j + 1] = tmpIndex;
-    }
-}
-
-void SelectionSort(ULONGLONG *filesSize, int *filesIndex, int N)
-{   // v- выбранный
-    int i, j, vIndex, vNewIndex;
-    ULONGLONG v;
-
-    for (i = 0; i < N; i++)
-    {
-        v = filesSize[i];
-        vIndex = i;
-        vNewIndex = filesIndex[i];
-
-        for (j = i + 1; j < N; j++)
-        {
-            if (filesSize[j] < key)
-            {
-                v = filesSize[j];
-                vIndex = j;
-            }
-        }
-
-        swap_ULONGLONG(&filesSize[vIndex], &filesSize[i]); //  обмен между размерами файлов и индексами
-        swap_int(&filesIndex[i], &filesIndex[vIndex]);
-    }
-}
-
-void CountingSort(ULONGLONG *filesSize, int *filesIndex, int N)
-{
-    int i = 0, j = 0, index = 0, diff = 0, k = 0;
-    int *fileIndex;
-    ULONGLONG **count, min, max;
-
-    min = max = filesSize[0];
-
-    for (i = 0; i < N; i++)
-    {
-        if (filesSize[i] < min)
-            min = filesSize[i];
-        if (filesSize[i] > max)
-            max = filesSize[i];
-    }
-
-    diff = max - min + 1;
-    count = (ULONGLONG**)malloc(diff * sizeof(ULONGLONG*));
-    for (i = 0; i < diff; i++)
-        count[i] = (ULONGLONG*)malloc(REP * sizeof(ULONGLONG));
-    for (i = 0; i < diff; i++)
-        for (j = 0; j < REP; j++)
-            count[i][j] = 0;
-
-    for (i = 0; i < N; i++)
-    {
-        count[filesSize[i] - min][0]++;
-        count[filesSize[i] - min][(int)count[filesSize[i] - min][0]] = filesIndex[i];
-    }
-
-    for (i = 0; i < diff; i++)
-        for (j = 0; j < (count[i][0] + 1); j++)
-            if (j!= 0) filesIndex[k++] = count[i][j];
-
-    free(count);
-}
-
-void QuickSort(ULONGLONG *filesSize, int *filesIndex, int first, int last)
-{
-    int midIndex, i = first, j = last;
-
-    midIndex = (first + last) / 2;
-
-    QuickSplit(filesSize, &i, &j, filesSize[midIndex], filesIndex); // вспомогательная функция
-
-    if (j > first)
-        QuickSort(filesSize, filesIndex, first, j);
-    if (i < last)
-        QuickSort(filesSize, filesIndex, i, last);
-}
-
-void MergeSort(ULONGLONG *filesSize, int *filesIndex, int first, int last) 
-{
-    int midIndex = (last + first) / 2;
-
-    if (first >= last)
-        return;
-
-    MergeSort(filesSize, filesIndex, first, midIndex);
-    MergeSort(filesSize, filesIndex, midIndex + 1, last);
-    Merge(filesSize, filesIndex, first, midIndex, last); //вызов дополнительной функции
-}   
-
-
-
+//ОСНОВНАЯ ФУНКЦИЯ
 void main()
 {
-    wchar_t *filesPath, **filesName;
-    ULONGLONG *filesSize, *tmpSizes;
-    clock_t start, end;
-    int *filesIndex;
+    wchar_t *filesPath, **filesName;// путь, имена
+    ULONGLONG *filesSize, *tmpSizes;//размер,обмен размеров
+    clock_t start, end;// для времени
+    int *filesIndex;// индексы
     int j = -1, i = 0;
     int method = 0,f = 0;
 
-    filesName = (wchar_t**)malloc(FILES * sizeof(wchar_t*));
-    filesSize = (ULONGLONG*)malloc(FILES * sizeof(ULONGLONG));
+    filesName = (wchar_t**)malloc(FILES * sizeof(wchar_t*));//выделение памяти для имен
+    filesSize = (ULONGLONG*)malloc(FILES * sizeof(ULONGLONG));//выделение памяти для размеров
 
     printf("\t\t\t\tFile Manager");
     printf("\n\tWay to the folder:");
@@ -277,10 +282,10 @@ void main()
     while (j == -1)
     {
         Input(&filesPath);
-        j = ListDirectoryContents(filesPath, filesName, filesSize);
+        j = ListDirectoryContents(filesPath, filesName, filesSize);//
     }
 
-    filesIndex = (int*)malloc(j * sizeof(int));
+    filesIndex = (int*)malloc(j * sizeof(int));//выделение памяти
     for (i = 0; i < j; i++)
         filesIndex[i] = i;
 
@@ -291,11 +296,11 @@ void main()
         Menu(&method);
         if (method == 0) return;
 
-        tmpSizes = (ULONGLONG*)malloc(j * sizeof(ULONGLONG));           
+        tmpSizes = (ULONGLONG*)malloc(j * sizeof(ULONGLONG));    //выделения массива       
         for (i = 0; i < j; i++)                                    
             tmpSizes[i] = filesSize[i];
 
-        printf("\n Starting...\n Type of sort - %d.", method);
+        printf("\nType of sort - %d.", method);
         start = clock();
 
         switch (method)
@@ -324,7 +329,7 @@ void main()
 
         Output(filesName, filesSize, filesIndex, j);
         
-        printf("\n Time: %.4lf sec.\n", (double)(end - start) / CLOCKS_PER_SEC);
+        printf("\n Time: %.4lf sec.\n", (double)(end - start) / CLOCKS_PER_SEC);//вывод времени в секундах с заданной точностью 41 знак после запятой
 
         for (i = 0; i < j; i++)         
             filesIndex[i] = i;
