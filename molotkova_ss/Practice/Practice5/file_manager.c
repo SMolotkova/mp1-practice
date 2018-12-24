@@ -6,7 +6,24 @@
 #define FILES 50000 // масимальное число файлов
 #define BUFFER 2048 //максимльная длина строки
 
+//объявим прототипы функций:
 
+void Menu(int *method)
+void Input(wchar_t **sDir)
+void Output(wchar_t **filesName, ULONGLONG *filesSize, int *filesIndex, int N)  
+int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *filesSize)
+void BubbleSort(ULONGLONG *filesSize, int *filesIndex, int N)
+void InsertionSort(ULONGLONG *filesSize, int *filesIndex, int N)
+void SelectionSort(ULONGLONG *filesSize, int *filesIndex, int N)
+void intSwap(int *arg1, int *arg2)
+void ULONGLONGSwap(ULONGLONG *a1, ULONGLONG *a2)
+void CountingSort(ULONGLONG *filesSize, int *filesIndex, int N)
+void QuickSort(ULONGLONG *filesSize, int *filesIndex, int first, int last)
+void MergeSort(ULONGLONG *filesSize, int *filesIndex, int first, int last)
+void QuickSplit(ULONGLONG *filesSize, int *i, int *j, int mid, int *filesIndex)
+void Merge(ULONGLONG *filesSize, int *filesIndex, int first, int midIndex, int last)
+    
+    
 void Menu(int *method)// Функция меню (показывает сортировки, осуществялет ввод переменной,определяющий метод сортировки)
 {
     do
