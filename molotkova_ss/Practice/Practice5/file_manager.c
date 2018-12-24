@@ -30,7 +30,7 @@ void Menu(int *method)// Функция меню (показывает сорт�
     {
          printf("\n Choose the type of sorting:\n 1. BubbleSort\n 2. InsertionSort\n "
             "3. SelectionSort\n 4. CountingSort\n "
-            "5. QuickSort\n 6. MergeSort\n7.Close the program: ");
+            "5. QuickSort\n 6. MergeSort\n7");
         scanf("%d", method);//пользователь определяет алгоритм
     } while ((*method < 0) || (*method > 7));//условие проверки
 }
@@ -79,7 +79,7 @@ int ListDirectoryContents(const wchar_t *sDir, wchar_t **filesName, ULONGLONG *f
 
     do
     {
-        if (wcscmp(fdFile.cFileName, L".") != 0 && wcscmp(fdFile.cFileName, L"..") != 0)
+        if (wcscmp(fdFile.cFileName, L".") != 0 && wcscmp(fdFile.cFileName, L"..") != 0)//функция wcscmp сравнивает строки
         {
             ULONGLONG fileSize = fdFile.nFileSizeHigh;
             fileSize <<= sizeof(fdFile.nFileSizeHigh) * 8;
@@ -116,47 +116,43 @@ void BubbleSort(ULONGLONG *filesSize, int *filesIndex, int N)
     }    
 }
 //СОРТИРОВКА ВСТАВКАМИ
-void InsertionSort(ULONGLONG *filesSize, int *filesIndex, int N)
+void InsertionSort(ULONGLONG *filesSize, int *filesIndex, int N) //принимает массивы с размерами с индексами и количество элементов, для небольших массивов более эффективна
 {
-    int i, j, tmpIndex;
-    ULONGLONG tmpSize; //выбран этот тип, так как размеры файлов в нем же
+    int i, location, newIndex;//расположение - location
+    ULONGLONG nweSize; //выбран этот тип, так как размеры файлов в нем же
 
     for (i = 1; i < N; i++)
     {
         tmpIndex = filesIndex[i];
-        j = i - 1;
+        location = i - 1;
 
-        while ((j >= 0) && (filesSize[filesIndex[j]] > filesSize[tmpIndex]))
+        while ((location >= 0) && (filesSize[filesIndex[location]] > filesSize[newIndex])) //если не выполняется то переходим к фор и след элементу
         {
-            filesIndex[j + 1] = filesIndex[j];
-            j--;
+            filesIndex[location + 1] = filesIndex[j];
+            location = location - 1;
         }
-        filesIndex[j + 1] = tmpIndex;
+        filesIndex[location + 1] = newIndex;
     }
 }
 //СОРТИРОВКА ВЫБОРОМ
 void SelectionSort(ULONGLONG *filesSize, int *filesIndex, int N)
 {   // v- выбранный
-    int i, j, vIndex, vNewIndex;
-    ULONGLONG v;
-
+    int i, j, minIndex, minIndex1;// i-счетчик
+    
     for (i = 0; i < N; i++)
-    {//определяемся с выбранным размером
-        v = filesSize[i];
-        vIndex = i;
-        vNewIndex = filesIndex[i];
+    {   //в первом проходе цикла нужно выбрать минимальный элемент и меняется местами с первым( fileSize[i=1])
+        minIndex = i;
+        minIndex1 = filesIndex[i];
 
-        for (j = i + 1; j < N; j++)
+        for (j = i + 1; j < N; j++) //поиск минимума со второй позиции
         {
-            if (filesSize[j] <v)
+            if (filesSize[filesIndex[j]] < fileSize[minIndex1]) //если один меньше другого-меняем
             {
-                v = filesSize[j];
-                vIndex = j;
+                minIndex1 = filesIndex[j];
+                minIndex = j;
             }
         }
-
-        swap_ULONGLONG(&filesSize[vIndex], &filesSize[i]); //  обмен между размерами файлов и связанными индексами
-        swap_int(&filesIndex[i], &filesIndex[vIndex]);
+        swap_int(&filesIndex[i], &filesIndex[minIndex]);
     }
 }
 //Функции перемены значений(ПОСТУПАЮЩИЕ ЗНАЧЕНИЯ - две переменные), разделены, так как переменная для обмена будет разного типа.
