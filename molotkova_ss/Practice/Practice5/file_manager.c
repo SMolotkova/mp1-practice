@@ -167,7 +167,7 @@ void CountingSort(ULONGLONG *filesSize, int *filesIndex, int N)
     {
         if (filesSize[filesIndex[i]] > FILES)
         {
-            printf("File size too large\n"); 
+            printf("Error\n"); 
             return;
         }
         c[filesSize[filesIndex[i]]]++;
