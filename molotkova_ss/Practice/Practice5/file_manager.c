@@ -250,29 +250,29 @@ void QuickSplit(ULONGLONG *filesSize, int *i, int *j, int mid, int *filesIndex)
 void Merge(ULONGLONG *filesSize, int *filesIndex, int first, int midIndex, int last)
 {
     int i = first, j = midIndex + 1, it;
-    int *tmpIndex = (int*)malloc((last - first + 1) * sizeof(int));//массив для индексов
-    ULONGLONG *tmp = (ULONGLONG*)malloc((last - first + 1) * sizeof(ULONGLONG));//массив для размеров
+    int *forIndex = (int*)malloc((last - first + 1) * sizeof(int));//массив для индексов
+    ULONGLONG *R = (ULONGLONG*)malloc((last - first + 1) * sizeof(ULONGLONG));//массив для размеров
 
     for (it = 0; it < last - first + 1; it++)
         if ((j > last) || ((i <= midIndex) && (filesSize[i] < filesSize[j])))
         {
-            tmp[it] = filesSize[i];
-            tmpIndex[it] = filesIndex[i++];
+            R[it] = filesSize[i];
+            forIndex[it] = filesIndex[i++];
         }
         else
         {
-            tmp[it] = filesSize[j];
-            tmpIndex[it] = filesIndex[j++];
+            R[it] = filesSize[j];
+            forIndex[it] = filesIndex[j++];
         }
 
     for (it = first; it < last + 1; it++)
     {
-        filesSize[it] = tmp[it - first];
-        filesIndex[it] = tmpIndex[it - first];
+        filesSize[it] = R[it - first];
+        filesIndex[it] = forIndex[it - first];
     }
 
-    free(tmp);
-    free(tmpIndex);
+    free(R);
+    free(forIndex);
 }
 
 
