@@ -1,58 +1,58 @@
 #include <stdio.h> 
 #define N 4 
-int scan(int dop[], int quantity[], int dlya_dop) // ввели штрихкод и количество товара
+int scan(int dop[], int quantity[], int dlya_dop) // ГўГўГҐГ«ГЁ ГёГІГ°ГЁГµГЄГ®Г¤ ГЁ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГІГ®ГўГ Г°Г 
 {
     int i;
     do
     {
-        printf("Введите штрихкод\n");
+        printf("Г‚ГўГҐГ¤ГЁГІГҐ ГёГІГ°ГЁГµГЄГ®Г¤\n");
         scanf("%d", &dop[dlya_dop]);
     }
     while ((dop[dlya_dop] >N) || (dop[dlya_dop] <1));
-    printf("\nВведите количество\n");
-    scanf("%d", &i); //количество текущего товара
-    return i; //сохраняется
+    printf("\nГ‚ГўГҐГ¤ГЁГІГҐ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ®\n");
+    scanf("%d", &i); //ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГІГҐГЄГіГ№ГҐГЈГ® ГІГ®ГўГ Г°Г 
+    return i; //Г±Г®ГµГ°Г Г­ГїГҐГІГ±Гї
 }
-void description(char names[][10], int prices[], int discounts[], int i)// последнее-номер штрихкода вывод описания
+void description(char names[][10], int prices[], int discounts[], int i)// ГЇГ®Г±Г«ГҐГ¤Г­ГҐГҐ-Г­Г®Г¬ГҐГ° ГёГІГ°ГЁГµГЄГ®Г¤Г  ГўГ»ГўГ®Г¤ Г®ГЇГЁГ±Г Г­ГЁГї
 {
     int j;
     for(j = 0; j < 10; j++)
         printf("%c", names[i][j]);
     printf("price=%d discount=%d\n", prices[i], discounts[i]);
 }    
-void adding (int quantity[], int n, int z)// массив количество, номер штрихкода, количество товара
+void adding (int quantity[], int n, int z)// Г¬Г Г±Г±ГЁГў ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ®, Г­Г®Г¬ГҐГ° ГёГІГ°ГЁГµГЄГ®Г¤Г , ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГІГ®ГўГ Г°Г 
 {
     quantity[n] += z;
 }
 void check_formation(char names[][10], int prices[], int discounts[], int quantity[])
 {
-    int a = 0;// стоимость общая без скидок
-    int b = 0;// стоимость со скидками
-    int i;// счетчик 
+    int a = 0;// Г±ГІГ®ГЁГ¬Г®Г±ГІГј Г®ГЎГ№Г Гї ГЎГҐГ§ Г±ГЄГЁГ¤Г®ГЄ
+    int b = 0;// Г±ГІГ®ГЁГ¬Г®Г±ГІГј Г±Г® Г±ГЄГЁГ¤ГЄГ Г¬ГЁ
+    int i;// Г±Г·ГҐГІГ·ГЁГЄ 
     for(i = 0; i < N; i++)
     {
         if (quantity[i] > 0){
         description(names, prices, discounts, i);
-        printf("Количество=%d", quantity[i]);
+        printf("ГЉГ®Г«ГЁГ·ГҐГ±ГІГўГ®=%d", quantity[i]);
         a = a + quantity[i] * prices[i];
         b = b + prices[i] * 0.01 * (100 - discounts[i]) * quantity[i];}
     }
-    printf ("Стоимость без скидок=%d\n Стоимость со скидками=%d\n Общая скидка=%d\n", a,b, (a-b)*100/a);
+    printf ("Г‘ГІГ®ГЁГ¬Г®Г±ГІГј ГЎГҐГ§ Г±ГЄГЁГ¤Г®ГЄ=%d\n Г‘ГІГ®ГЁГ¬Г®Г±ГІГј Г±Г® Г±ГЄГЁГ¤ГЄГ Г¬ГЁ=%d\n ГЋГЎГ№Г Гї Г±ГЄГЁГ¤ГЄГ =%d\n", a,b, (a-b)*100/a);
 }
 void main ()
-{//БАЗА
+{//ГЃГЂГ‡ГЂ
     char names[N][10] = {"          ", "milk      ", "bread     ", "fish      "};
     int prices[N] = {0, 68, 21, 170};
     int discounts[N] = {0, 10, 15, 5};
-    int quantity[N] = {0};//количество
+    int quantity[N] = {0};//ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ®
     int dop[10];
-    int p;//значения команды
-    int q;//количество текущего товара
-    int dlya_dop = 0;//счетчик сканов одного товара
+    int p;//Г§Г­Г Г·ГҐГ­ГЁГї ГЄГ®Г¬Г Г­Г¤Г»
+    int q;//ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГІГҐГЄГіГ№ГҐГЈГ® ГІГ®ГўГ Г°Г 
+    int dlya_dop = 0;//Г±Г·ГҐГІГ·ГЁГЄ Г±ГЄГ Г­Г®Гў Г®Г¤Г­Г®ГЈГ® ГІГ®ГўГ Г°Г 
     q = scan(dop, quantity, dlya_dop);
     do
     {
-        printf("1-сканировать\n 2-вывести описание\n 3-добавить в чек\n 4-сформировать чек\n 5- подвести итог\n");
+        printf("1-Г±ГЄГ Г­ГЁГ°Г®ГўГ ГІГј\n 2-ГўГ»ГўГҐГ±ГІГЁ Г®ГЇГЁГ±Г Г­ГЁГҐ\n 3-Г¤Г®ГЎГ ГўГЁГІГј Гў Г·ГҐГЄ\n 4-Г±ГґГ®Г°Г¬ГЁГ°Г®ГўГ ГІГј Г·ГҐГЄ\n 5- ГЇГ®Г¤ГўГҐГ±ГІГЁ ГЁГІГ®ГЈ\n");
         scanf("%d", &p);
         switch(p)
         {
