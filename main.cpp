@@ -1,36 +1,23 @@
-#pragma once 
-#include <iostream> 
-#include "Bin.h" 
-using namespace std; 
-#define N 10 
+#pragma once
+#include "vectora.h"
+#include <iostream>
+using namespace std;
 
-void main() 
-{ 
-int *a = new int[N]; 
-int *b = new int[N]; 
-Gen(a, N, 10.0); 
-Print(a, N); 
+int main()
+{
+    int i;
+    int *elem = new int[10];
+    for (i = 0; i < 10; i++)
+        elem[i] = i;
 
-FILE *mass = fopen("C:\mass.bin", "wb"); 
-if (mass != NULL) 
-{ 
-fwrite(&a, sizeof(a[0]), N, mass); 
-cout « mass « endl; 
-fclose(mass); 
-} 
-else 
-{ 
-cout « "error"; 
-} 
-fopen("C:\mass.bin", "rb"); 
-fread(&b, sizeof(b[0]), N, mass); 
-for(int i = 0; i < N; i++) 
-cout « b[i]; 
+    Vector* v1 = new Vector();
+    Vector* v2 = new Vector(10);
+    Vector* v3 = new Vector(10, elem);
+    Vector* v4 = new Vector(v3);
+    v3->PrintVector();
+    v2->PrintVector();
+    v1->PrintVector();
+    v4->PrintVector();
 
-fclose(mass); 
-
-Choose_Sort(b, N); 
-Print(b, N); 
-delete a; 
-delete b; 
+    cin >> i;    return 0;
 }
