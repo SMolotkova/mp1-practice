@@ -1,23 +1,32 @@
 #pragma once
-#include "vectora.h"
 #include <iostream>
+#include "Zag.h"
 using namespace std;
 
-int main()
+void main()
 {
-    int i;
-    int *elem = new int[10];
-    for (i = 0; i < 10; i++)
-        elem[i] = i;
-
-    Vector* v1 = new Vector();
-    Vector* v2 = new Vector(10);
-    Vector* v3 = new Vector(10, elem);
-    Vector* v4 = new Vector(v3);
-    v3->PrintVector();
-    v2->PrintVector();
-    v1->PrintVector();
-    v4->PrintVector();
-
-    cin >> i;    return 0;
+	Vector a(3);//создать с параметрами
+	a.Input();
+	cout << " a output";
+	a.Output();
+	Vector b;
+	b = a;//приравнять
+	cout << " b = a" << " " << " b output";
+	b.Output();
+	Vector c;
+	c = a + b;//сложение
+	cout << " c = a + b";
+	c.Output();
+	Vector d;
+	d = a - b;//сложение
+	cout << " d = a - b";
+	d.Output();
+	double scal;
+	scal = a * b;//скаляр
+	cout << " scal" << scal;
+	double leng = d.Length();
+	cout << "lengths" << leng;
+	*(a[2]) = 5;
+	cout << " измененная третья координата";
+	a.Output();
 }
