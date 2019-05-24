@@ -6,7 +6,7 @@ void main() {
 	int m, a, b, c;
 	int ch[10], arr[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	srand((unsigned int)time(0));
-	printf("Äîáðî ïîæàëîâàòü â èãðó Áûêè è êîðîâû!\n");
+	printf("Bulls and cows!\n");
 	
 	do {
 		printf("Ââåäèòå çíà÷åíèå n\n");
