@@ -18,7 +18,7 @@ void main() {
 			else
 				if (u > n) printf("Много\n");
 				else {
-					printf("Óãàäàíî!\n Попытка %d\n", i);
+					printf("Угадано!\n Попытка %d\n", i);
 					break;
 				}
 			i += 1;
