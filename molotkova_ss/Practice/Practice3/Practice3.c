@@ -3,7 +3,7 @@
 #include <time.h>
 void main() {
 	int rezhim;
-	printf("Âûáåðèòå ðåæèì(1 èëè 2)");
+	printf("Выберите режим(1 или 2)");
 	scanf("%d", &rezhim);
 	if (rezhim == 1)
 	{
@@ -12,13 +12,13 @@ void main() {
 		n = rand() % 1000;
 		i = 1;
 		do {
-			printf("%d-ÿ ïîïûòêà: ", i);
+			printf("%d-я попытка: ", i);
 			scanf("%d", &u);
-			if (u < n) printf("Ìàëî\n");
+			if (u < n) printf("Мало\n");
 			else
-				if (u > n) printf("Ìíîãî\n");
+				if (u > n) printf("Много\n");
 				else {
-					printf("Óãàäàíî!\n Ïîïûòêà %d\n", i);
+					printf("Óãàäàíî!\n Попытка %d\n", i);
 					break;
 				}
 			i += 1;
@@ -29,12 +29,12 @@ void main() {
 		char otvet;
 		srand((unsigned int)time(0));
 		do {
-			printf("Ââåäèòå ÷èñëî\n");
+			printf("Введите число\n");
 			scanf("%d", &m);
 		} while ((0 > m) && (m > 1000));
 		do {
 			z = ((double)(b - a)) / RAND_MAX * rand() + a;
-			printf("×èñëî %d", z);
+			printf("Число %d", z);
 			scanf("%s", &otvet);
 			switch (otvet) {
 			case '>':
@@ -44,11 +44,11 @@ void main() {
 				b = z;
 				break;
 			case '=':
-				printf("Çàãàäàííîå ÷èñëî %d \n", z);
+				printf("Загаданное число %d \n", z);
 				break;
 			}
 			j++;
 		} while (z != m);
-		printf("Âàøè ïîïûòêè %d \n", j);
+		printf("Ваши попытки %d \n", j);
 	}
 }
