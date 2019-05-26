@@ -6,10 +6,10 @@ void main() {
 	int m, a, b, c;
 	int ch[10], arr[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	srand((unsigned int)time(0));
-	printf("Äîáðî ïîæàëîâàòü â èãðó Áûêè è êîðîâû!\n");
+	printf("Добро пожаловать в игру Быки и коровы!\n");
 	
 	do {
-		printf("Ââåäèòå çíà÷åíèå n\n");
+		printf("Введите значение n\n");
 		scanf("%d", &n);
 	} while ((n <= 0) && (n > 10));
 	m = rand() % 100 + 15; 
@@ -39,7 +39,7 @@ void main() {
 		cow = 0; bull = 0; c++;
 		do {
 			m = 0;
-			printf("Ââåäèòå ÷èñëî áåç ïîâòîðåíèé\n");
+			printf("Введите число без повторений\n");
 			scanf("%d", &a);
 			for (i = (n - 1); i >= 0; i--)
 			{
@@ -64,7 +64,7 @@ void main() {
 					cow++;
 			}
 		}
-		printf("Áûêè=%d, êîðîâû=%d\n", bull, cow);
+		printf("Быки=%d, коровы=%d\n", bull, cow);
 	} while (bull != n);
-	printf("Âû ïîáåäèëè, êîëè÷åñòâî ïîïûòîê %d\n", c);
+	printf("Вы победили, количество попыток %d\n", c);
 }
