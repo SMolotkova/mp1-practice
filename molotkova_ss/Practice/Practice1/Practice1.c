@@ -12,14 +12,14 @@ void main()
 	t2 = 0.015f;
 	t3 = 0.015f;
 	t4 = 0.01f;
-    setlocale (LC_ALL, "Russian"); 
+        setlocale (LC_ALL, "Russian"); 
 
 	printf ("Введите высоту\n"); 
 	scanf ("%f", &h); 
 	printf ("Введите ширину\n"); 
 	scanf ("%f", &w); 
 	printf ("Введите глубину\n"); 
-    scanf ("%f", &d); 
+        scanf ("%f", &d); 
 	printf ("Введите дсп\n"); 
 	scanf ("%f", &dsp); 
 	printf ("Введите двп\n"); 
