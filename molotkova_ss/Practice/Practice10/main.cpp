@@ -2,165 +2,89 @@
 #include <iostream>
 #include "Container1.h"
 #include "Container2.h"
+#define MAXSIZE 5
 using namespace std;
 
 void main()
 {
-	Container1<int,10> c1(4);
+	cout << "Container1" << endl;
+	int count;
+	cout << "Count = ";
+	cin >> count;
+	Container1<int> Container_1(MAXSIZE);
+	cout << "Container1(Fill) = " << endl;
+	try 
+	{
+		Container_1.Fill(count);//FILLING
+	}
+	catch (const char* error)
+	{
+		cout << error << endl;
+	}
+	Container_1.Print();//OUTPUT
+	Container1<int> COPYContainer_1(Container_1);
+	COPYContainer_1.Add(5);
+	COPYContainer_1.Print();
+	COPYContainer_1.Add(12);
+	COPYContainer_1.Print();
 	try
 	{
-		c1.Fill();
+		COPYContainer_1.Fill(0);
 	}
-	catch(char* errors)
+	catch (const char* error)
 	{
-		cout << errors << endl;
+		cout << error << endl;
 	}
-	Container1<int,10> c12(c1);
+	COPYContainer_1.IsEmpty();
 	try
-	{
-		c12.Print();
+	{ 
+		Container_1.Delete(4);
 	}
-	catch(char* errors)
+	catch (const char* error)
 	{
-		cout << errors << endl;
-	}
-	try
-	{
-		*c1[0] = 11;
-		cout << *c1[0] << endl;
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	try
-	{
-		*c1[122] = 11;
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	try
-	{
-		c12.Delete(5);//вводила
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	try
-	{
-		c12.Print();
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	try
-	{
-		c12.Delete(12);//не вводила
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	
-	try
-	{
-		c1.Add(101);//добавление числа
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	try
-	{
-		c1.Print();
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
+		cout << error << endl;
 	}
 
 
 
-
-	Container2<int,10> c2(4);
+	cout << "Container2" << endl;
+	int count;
+	cout << "Count = ";
+	cin >> count;
+	Container1<int*> Container_2(MAXSIZE);
+	cout << "Container2(Fill) = " << endl;
 	try
 	{
-		c2.Fill();
+		Container_2.Fill(count);//FILLING
 	}
-	catch(char* errors)
+	catch (const char* error)
 	{
-		cout << errors << endl;
+		cout << error << endl;
 	}
-	Container2<int,10> c22(c2);
+	Container_2.Print();//OUTPUT
+	Container1<int*> COPYContainer_2(Container_2);
+	int a = 5;
+	COPYContainer_2.Add(&a);
+	COPYContainer_2.Print();
+	int b = 12;
+	COPYContainer_2.Add(&b);
+	COPYContainer_2.Print();
 	try
 	{
-		c22.Print();
+		COPYContainer_2.Fill(0);
 	}
-	catch(char* errors)
+	catch (const char* error)
 	{
-		cout << errors << endl;
+		cout << error << endl;
 	}
+	COPYContainer_2.IsEmpty();
 	try
 	{
-		*c2[0] = 11;
-		cout << *c2[0] << endl;
+		Container_2.Delete(4);
 	}
-	catch(char* errors)
+	catch (const char* error)
 	{
-		cout << errors << endl;
+		cout << error << endl;
 	}
-	try
-	{
-		*c2[122] = 11;
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	try
-	{
-		c22.Delete(5);//вводила
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	try
-	{
-		c22.Print();
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	try
-	{
-		c22.Delete(12);//не вводила
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	
-	try
-	{
-		c2.Add(101);//добавление числа
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-	try
-	{
-		c2.Print();
-	}
-	catch(char* errors)
-	{
-		cout << errors << endl;
-	}
-
 }
+
