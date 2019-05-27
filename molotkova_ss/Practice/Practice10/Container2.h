@@ -2,62 +2,62 @@
 #include <iostream>
 using namespace std;
 
-template <typename T, int maxsize>
-class Container
+template <typename T>
+class Container1<T*>
 {
 private:
     T** arr;
     int count;
+	int maxsize;
+	void Adding(int add);
 public:
-    Container();//по умолчанию
-    Container(int x);
-    Container(const Container& temp);//конструктор копирования
-    ~Container();
+    Container1();
+    Container1(int x);
+    Container1(const Container1& tmp);
+    ~Container1();
 
-    bool IsFull()const;//проверки
-    bool IsEmpty()const;//проверки
+    bool IsFull()const;
+    bool IsEmpty()const;
 
-    int Find(T a)const;// поиск
-    void Add(T a);//вставка
-    void Remove(T a);//удаление
-    T* operator[](int i);
+    int Find(T a)const;
+    void Add(T* a);
+    void Delete(T a);
+    T& operator[](int i);
+    const T& operator[](int i)const;//reading
 
     void Print()const;
-    void Fill();
+    void Fill(int count);
 };
 
-template <typename T, int maxsize>
-Container<T, maxsize>::Container()
+template <typename T>
+Container1<T*>::Container1()
 {
     count = 0;
+    maxsize = 0;
+}
+
+template <typename T>
+Container1<T*>::Container1(int maxsize)
+{
+    this-> maxsize = maxsize;
+	count = 0;
     arr = new T*[maxsize];
 }
 
-template <typename T, int maxsize>
-Container<T, maxsize>::Container(int count)
+template <typename T>
+Container1<T*>::Container1(const Container1& tmp)
 {
-    this-> count = count;
+    this->count = tmp.count;
+	this->maxsize = tmp.maxsize;
     arr = new T*[maxsize];
     for (int i = 0; i < count; i++)
     {
-        arr[i] = new T;
+		arr[i] = new T(*(tmp.arr[i]));
     }
 }
 
-template <typename T, int maxsize>
-Container<T, maxsize>::Container(const Container& temp)
-{
-    this->count = temp.count;
-    arr = new T*[maxsize];
-    for (int i = 0; i < count; i++)
-    {
-        arr[i] = new T;
-        (*arr[i]) = temp.*arr[i];
-    }
-}
-
-template <typename T, int maxsize>
-Container<T, maxsize>::~Container()
+template <typename T>
+Container1<T*>::~Container1()
 {
     for (int i = 0; i < count; i++)
     {
@@ -67,39 +67,39 @@ Container<T, maxsize>::~Container()
     count = 0;
 }
 
-template <typename T, int maxsize>
-bool Container<T, maxsize>::IsFull()const
+template <typename T>
+bool Container1<T*>::IsFull()const
 {
     return (count == maxsize);
 }
 
-template <typename T, int maxsize>
-bool Container<T, maxsize>::IsEmpty()const
+template <typename T>
+bool Container1<T*>::IsEmpty()const
 {
     return (count == 0);
 }
 
-template <typename T, int maxsize>
-int Container<T, maxsize>::Find(T a)const
+template <typename T>
+int Container1<T*>::Find(T a)const
 {
     for (int i = 0; i < count; i++)
-        if (*(arr[i]) == a)
+        if (*arr[i] == a)
             return i;
     return -1;
 }
 
-template <typename T, int maxsize>
-void Container<T, maxsize>::Add(T a)
+template <typename T>
+void Container1<T*>::Add(T* a)
 {
-        if (this->IsFull())
-            throw "Container is full";
+	if (this->IsFull())
+		this->Adding(1);
         count++;
         arr[count - 1] = new T;
         *arr[count - 1] = a;
 }
 
-template <typename T, int maxsize>
-void Container<T, maxsize>::Remove(T a)
+template <typename T>
+void Container1<T*>::Delete(T a)
 {
    
         if (this->IsEmpty())
@@ -107,24 +107,30 @@ void Container<T, maxsize>::Remove(T a)
         int j = Find(a);
         if (j == -1)
             throw "Element does not exist";
-        *arr[j] = *arr[count - 1];
-        delete arr[count - 1];
-        count--;
+		delete arr[j];
+        arr[j] = arr[count - 1];
+		arr[--count] = 0;
 }
 
-template <typename T, int maxsize>
-T* Container<T, maxsize>::operator[](int i)
+template <typename T>
+T& Container1<T*>::operator[](int i)
 {
 	if ((i < 0) || (i >= count))
        throw "Element does not exist";
-    return arr[i];
+    return *arr[i];
 }
 
-template <typename T, int maxsize>
-void Container<T, maxsize>::Print()const
+template <typename T>
+const T& Container1<T*>::operator[](int i)const
 {
-	if (this->IsEmpty())
-		throw "Container is empty";
+	if ((i < 0) || (i >= count))
+		throw "Element does not exist";
+	return *arr[i];
+}
+
+template <typename T>
+void Container1<T*>::Print()const
+{
     for (int i = 0; i < count; i++)
     {
         cout << *(arr[i]) << " ";
@@ -132,9 +138,10 @@ void Container<T, maxsize>::Print()const
 	cout << endl;
 }
 
-template <typename T, int maxsize>
-void Container<T, maxsize>::Fill()
+template <typename T>
+void Container1<T*>::Fill(int count)
 {
+	this->count = count;
 	if (this->IsEmpty())
             throw "Container is empty";
         for (int i = 0; i < count; i++)
