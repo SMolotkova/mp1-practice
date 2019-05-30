@@ -46,6 +46,10 @@ void main() {
 			case '=':
 				printf("Загаданное число %d \n", z);
 				break;
+			default:
+    
+				printf("Неверный ввод"\n");
+    				break;
 			}
 			j++;
 		} while (z != m);
