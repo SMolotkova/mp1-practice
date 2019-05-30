@@ -32,7 +32,8 @@ void Menu(int *method)// Функция меню (показывает сорт�
 			"3. SelectionSort\n 4. CountingSort\n "
 			"5. QuickSort\n 6. MergeSort\n7");
 		scanf("%d", method);//пользователь определяет алгоритм
-	} while ((*method < 0) || (*method > 7));//условие проверки
+	} 
+	while ((*method < 0) || (*method > 7));//условие проверки
 }
 /***работа с файлами****/
 
@@ -109,8 +110,8 @@ void BubbleSort(ULONGLONG *filesSize, int *filesIndex, int N)
 		{
 			if (filesSize[j] > filesSize[j + 1]) //если один больше другого-меняем, в результате первого шага получим больший индекс
 			{
-				swap_ULONGLONG(&filesSize[j], &filesSize[j + 1]);
-				swap_int(&filesIndex[j], &filesIndex[j + 1]); //меняем связанные индексы
+				ULONGLONGSwap(&filesSize[j], &filesSize[j + 1]);
+				intSwap(&filesIndex[j], &filesIndex[j + 1]); //меняем связанные индексы
 			}
 		}
 	}
@@ -152,7 +153,7 @@ void SelectionSort(ULONGLONG *filesSize, int *filesIndex, int N)
 				minIndex = j;
 			}
 		}
-		swap_int(&filesIndex[i], &filesIndex[minIndex]);
+		intSwap(&filesIndex[i], &filesIndex[minIndex]);
 	}
 }
 //Функции перемены значений(ПОСТУПАЮЩИЕ ЗНАЧЕНИЯ - две переменные), разделены, так как переменная для обмена будет разного типа.
@@ -238,8 +239,8 @@ void QuickSplit(ULONGLONG *filesSize, int *i, int *j, int mid, int *filesIndex)
 
 		if (*i <= *j)
 		{
-			swap_ULONGLONG(&(filesSize[*i]), &(filesSize[*j]));
-			swap_int(&(filesIndex[*i]), &(filesIndex[*j]));
+			ULONGLONGSwap(&(filesSize[*i]), &(filesSize[*j]));
+			intSwap(&(filesIndex[*i]), &(filesIndex[*j]));
 
 			(*i)++; //i уходит вправо, а j влево
 			(*j)--;
