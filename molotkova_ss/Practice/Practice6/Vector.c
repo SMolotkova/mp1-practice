@@ -17,7 +17,7 @@ void Delete(vector* v)
 vector* Sum(vector* a, vector* b)
 {
 	if ((*a).n != (*b).n)
-		return;
+		return  NULL;
 	vector* res = (vector*)malloc(sizeof(vector));
 	(*res).n = (*a).n;
 	int i;
@@ -27,21 +27,21 @@ vector* Sum(vector* a, vector* b)
 }
 vector* Diff(vector* a, vector* b)
 {
+	vector* res;
+	int i;
 	if ((*a).n != (*b).n)
 		return;
-	vector* res;
 	res = Create((*a).n);
-	int i;
 	for (i = 0; i < (*res).n; i++)
 		(*res).x[i] = (*a).x[i] - (*b).x[i];
 	return res;
 }
 double Scal(vector* a, vector* b)
 {
-	if ((*a).n != (*b).n)
-		return;
 	int i;
 	double scal = 0;
+	if ((*a).n != (*b).n)
+		return;	
 	for (i = 0; i < (*a).n; i++)
 		scal += (*a).x[i] * (*b).x[i];
 	return scal;
@@ -51,7 +51,7 @@ double Angl(vector* a, vector*b)
 	double _a = Scal(a, b);
 	double _b = Lenghs(a) * Lenghs(b);
 	if (_b == 0)
-		return;
+		return 0.0;
 	double _c = _a / _b;
 	double cosInRadians = acos(_c);
 	double angle = cosInRadians * (180 / 3.14);
