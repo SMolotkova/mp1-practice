@@ -27,7 +27,7 @@ ToDoList::~ToDoList()
 }
 void ToDoList::Read(char* a)
 {
-	int buff = 50;
+	int buff;
 	ifstream file(a);
 	if (!file.is_open())
 		throw "File is not open";
@@ -38,7 +38,7 @@ void ToDoList::Read(char* a)
 	int day, month, year;
 	unsigned minutes, hours, duration;
 	char* b = new char[50];
-	string s, ss; //строка и подстрока
+	string s, ss; //Г±ГІГ°Г®ГЄГ  ГЁ ГЇГ®Г¤Г±ГІГ°Г®ГЄГ 
 	for (int i = 0; i < buff; i++)
 	{
 		file >> type;
@@ -64,7 +64,7 @@ void ToDoList::Read(char* a)
 			ss = "";
 			start = end;
 			end = s.find("\0", start);
-			ss = s.substr(start + 1, end - start - 1);//описание
+			ss = s.substr(start + 1, end - start - 1);//Г®ГЇГЁГ±Г Г­ГЁГҐ
 			Date date = Date(day, month, year);
 			tasks[i] = new Type1(ss, date);
 		}
