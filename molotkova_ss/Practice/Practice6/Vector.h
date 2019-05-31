@@ -2,8 +2,8 @@
 
 typedef struct
 {
-	int n;//размерность
-	double *x;//координаты в массиве
+	int n;//СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ
+	double *x;//РєРѕРѕСЂРґРёРЅР°С‚С‹ РІ РјР°СЃСЃРёРІРµ
 }vector;
 
 vector* Create(int n);
