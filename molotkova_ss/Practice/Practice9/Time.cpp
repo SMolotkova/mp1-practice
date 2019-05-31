@@ -33,7 +33,7 @@ bool Time :: operator== (const Time& t)const
 		return true;
 	return false;
 }
-Time& Time ::operator = (const Time& t)
+const Time& Time ::operator = (const Time& t)
 {
 	if (*this == t)
 		return *this;
