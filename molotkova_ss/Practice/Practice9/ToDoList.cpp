@@ -38,7 +38,7 @@ void ToDoList::Read(char* a)
 	int day, month, year;
 	unsigned minutes, hours, duration;
 	char* b = new char[50];
-	string s, ss; //ñòðîêà è ïîäñòðîêà
+	string s, ss; //строка и подстрока
 	for (int i = 0; i < buff; i++)
 	{
 		file >> type;
@@ -64,7 +64,7 @@ void ToDoList::Read(char* a)
 			ss = "";
 			start = end;
 			end = s.find("\0", start);
-			ss = s.substr(start + 1, end - start - 1);//îïèñàíèå
+			ss = s.substr(start + 1, end - start - 1);//описание
 			Date date = Date(day, month, year);
 			tasks[i] = new Type1(ss, date);
 		}
