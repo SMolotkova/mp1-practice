@@ -16,34 +16,34 @@ void Delete(vector* v)
 }
 vector* Sum(vector* a, vector* b)
 {
-	if (a->n != (b->n)
+	if ((a->n) != (b->n))
 		return  NULL;
 	vector* res = (vector*)malloc(sizeof(vector));
 	res->n = a->n;
 	int i;
-	for (i = 0; i < res->n; i++)
-		(*res).x[i] = (*a).x[i] + (*b).x[i];
+	for (i = 0; i < (res->n); i++)
+		res->x[i] = a->x[i] + b->x[i];
 	return res;
 }
 vector* Diff(vector* a, vector* b)
 {
 	vector* res;
 	int i;
-	if ((*a).n != (*b).n)
+	if ((a->n) != (b->n))
 		return;
-	res = Create(a->n);
-	for (i = 0; i < res->n; i++)
-		(*res).x[i] = (*a).x[i] - (*b).x[i];
+	res = Create((a->n));
+	for (i = 0; i < (res->n); i++)
+		res->x[i] = a->x[i] - b->x[i];
 	return res;
 }
 double Scal(vector* a, vector* b)
 {
 	int i;
 	double scal = 0;
-	if (a->n) != (b->n))
+	if ((a->n) != (b->n))
 		return;	
-	for (i = 0; i < (*a).n; i++)
-		scal += (*a).x[i] * (*b).x[i];
+	for (i = 0; i < (a->n); i++)
+		scal += (a->x[i]) * (b->x[i]);
 	return scal;
 }
 double Angl(vector* a, vector*b)
@@ -61,7 +61,7 @@ double Lenghs(vector* a)
 {
 	int i;
 	double lenghts = 0;
-	for (i = 0; i < a->n; i++)
+	for (i = 0; i < (a->n); i++)
 		lenghts += (a->x[i]) * (a->x[i]);
 	lenghts = sqrt(lenghts);
 	return lenghts;
@@ -70,12 +70,12 @@ double Lenghs(vector* a)
 void Output(vector* a)
 {
 	int i;
-	for (i = 0; i < a->n; i++)
-		printf("%lf ", (a->x[i]);
+	for (i = 0; i < (a->n); i++)
+		printf("%lf ", (a->x[i]));
 }
 void Input(vector* a)
 {
 	int i;
-	for (i = 0; i < a->n; i++)
-		scanf("%lf", &(a->x[i]);
+	for (i = 0; i < (a->n); i++)
+		scanf("%lf", &(a->x[i]));
 }
