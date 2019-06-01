@@ -93,12 +93,6 @@ Vector Vector::operator= (const Vector& v)
 		x[i] = v.x[i];
 	return *this;
 }
-double* Vector::operator[] (int index) const
-{
-	if ((index < 0) || (index >= n))
-		throw "Error";
-	return &(x[index]);
-}
 double Vector::Length() const
 {
 	double result = 0;
@@ -141,18 +135,48 @@ Vector Vector::operator*= (double a)
 		x[i] *= a;
 	return *this;
 }
-void Vector::Output()
+
+
+double& Vector::operator[](int index)
 {
-	if (n <= 0)
-		throw "Error";
-	for (int i = 0; i < n; i++)
-		cout << x[i] << " ";
-	cout << endl;
+    if ((index < 0) || (index >= n))
+        throw "Not correct index!";
+
+    return x[index];
 }
-void Vector::Input()
+
+const double& Vector::operator[](int index) const
 {
-	if (n <= 0)
-		throw "Error";
-	for (int i = 0; i < n; i++)
-		cin >> x[i];
+    if ((index < 0) || (index >= n))
+        throw "Not correct index!";
+
+    return x[index];
+}
+istream& operator>> (istream& input, Vector& v)
+{
+    for (int i = 0; i < v.n; i++)
+        input >> v.x[i];
+
+    return input;
+}
+
+ostream& operator<< (ostream &output, const Vector& v)
+{
+    if (v.n == 0)
+    {
+        output << "Empty";
+        return output;
+    }
+
+    output << "(";
+
+    for (int i = 0; i < v.n; i++)
+    {
+        if (i != v.n - 1)
+            output << v[i] << ", ";
+        else
+            output << v[i] << ")";
+    }
+
+    return output;
 }
