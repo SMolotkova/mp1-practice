@@ -24,8 +24,8 @@ public:
     T& operator[](int i);//input
     const T& operator[](int i)const;//reading
 
-    void Print()const;
-    void Fill(int count);
+    /*void Print()const;
+    void Fill(int count);*/
 
     friend istream& operator>>(istream&, Container1& tmp)
     {
