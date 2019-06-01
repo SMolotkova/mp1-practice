@@ -26,6 +26,33 @@ public:
 
     void Print()const;
     void Fill(int count);
+
+    friend istream& operator>>(istream&, Container1& tmp)
+    {
+        for (int i = 0; i < tmp.count; i++)
+            input >> tmp[i];
+
+        return input;
+    };
+
+    friend ostream& operator<<(ostream& out, const Container1& tmp)
+        if (tmp.count == 0)
+        {
+            output << "The container is empty";
+            return output;
+        }
+
+        output << "[ ";
+        for (int i = 0; i < tmp.count; i++)
+        {
+            if (i != (tmp.count - 1))
+                output << tmp[i] << ", ";
+            else
+                output << tmp[i] << "]";
+        }
+
+        return output;
+    }
 };
 
 template <typename T>
@@ -130,7 +157,7 @@ const T& Container1<T>:: operator[](int i)const
 	return arr[i];
 }
 
-template <typename T>
+/*template <typename T>
 void Container1<T>::Print()const
 {
 	for (int i = 0; i < count; i++)
@@ -150,7 +177,7 @@ void Container1<T>::Fill(int count)
         {
             cin >> arr[i];
         } 
-}
+}*/
 template <typename T>
 void Container1<T>::Adding(int add)
 {
