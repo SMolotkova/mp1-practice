@@ -8,8 +8,8 @@ class Container1
 private:
     T* arr;
     int count;//real number of elemnts
-	int maxsize;
-	void Adding(int add);
+    int maxsize;
+    void Adding(int add);
 public:
     Container1();
     Container1(int count);
