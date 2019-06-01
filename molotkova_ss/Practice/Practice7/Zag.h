@@ -3,14 +3,13 @@
 using namespace std;
 
 
-	class Vector
+class Vector
 {
 private:
 	int n;
 	double *x;
 
 public:
-	Vector();
 	Vector(int n);
 	Vector(const Vector& v);
 	~Vector();
@@ -21,13 +20,16 @@ public:
 	Vector operator- (double a) const;
 	Vector operator* (double a) const;
 	Vector operator= (const Vector& v);
-	double* operator[] (int ind) const;
-	double Length();
+	bool operator==(const Vector & v) const;
+	double Length() const;
 	Vector operator+= (const Vector& v);
 	Vector operator-= (const Vector& v);
 	Vector operator+= (double a);
 	Vector operator-= (double a);
 	Vector operator*= (double a);
-	void Output();
-	void Input();
+	
+	double& operator[](int);
+    	const double& operator[](int) const;
+	friend istream& operator>> (istream& input, Vector& v);
+        friend ostream& operator<< (ostream& output, const Vector& v); 
 };
