@@ -6,21 +6,17 @@ using namespace std;
 void main()
 {
 	Vector a(3);
-	a.Input();
-	cout << " a output";
-	a.Output();
+	cin >> a >> endl;
+	cout << " a output" << a << endl;
 	Vector b;
 	b = a;
-	cout << " b = a" << " " << " b output";
-	b.Output();
 	Vector c;
 	c = a + b;
 	cout << " c = a + b";
-	c.Output();
+	cout << c <<;
 	Vector d;
 	d = a - b;
-	cout << " d = a - b";
-	d.Output();
+	cout << " d = a - b" << d;
 	double scal;
 	scal = a * b;
 	cout << " scal" << scal;
@@ -28,5 +24,5 @@ void main()
 	cout << "lengths" << leng;
 	*(a[2]) = 5;
 	cout << " измененная третья координата";
-	a.Output();
+	cout << a[2] <<endl;
 }
