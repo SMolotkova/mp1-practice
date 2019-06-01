@@ -23,10 +23,6 @@ public:
     void Delete(T a);
     T& operator[](int i);//input
     const T& operator[](int i)const;//reading
-
-    /*void Print()const;
-    void Fill(int count);*/
-
     friend istream& operator>>(istream&, Container1& tmp)
     {
         for (int i = 0; i < tmp.count; i++)
@@ -110,17 +106,13 @@ int Container1<T>::Find(T a)const
 {
     for (int i = 0; i < count; i++)
 	{
-        if (arr[i] == a)
+        	if (arr[i] == a)
 		{ 
 			cout << "Index of element is "<< i <<endl;
 			return i;
-		}
-		else
-		{
-			cout << "Element does not exist"<<endl;
-		}
-	    return -1;	
+		}  	
 	}
+	return -1;
 }
 
 template <typename T>
