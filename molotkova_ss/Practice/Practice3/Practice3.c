@@ -1,3 +1,4 @@
+
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -51,4 +52,5 @@ void main() {
 		} while (z != m);
 		printf("Âàøè ïîïûòêè %d \n", j);
 	}
+
 }
