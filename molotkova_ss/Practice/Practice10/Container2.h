@@ -8,8 +8,8 @@ class Container1<T*>
 private:
     T** arr;
     int count;
-	int maxsize;
-	void Adding(int add);
+    int maxsize;
+    void Adding(int add);
 public:
     Container1();
     Container1(int x);
@@ -30,17 +30,10 @@ public:
 };
 
 template <typename T>
-Container1<T*>::Container1()
-{
-    count = 0;
-    maxsize = 0;
-}
-
-template <typename T>
 Container1<T*>::Container1(int maxsize)
 {
     this-> maxsize = maxsize;
-	count = 0;
+    count = 0;
     arr = new T*[maxsize];
 }
 
@@ -93,9 +86,7 @@ void Container1<T*>::Add(T* a)
 {
 	if (this->IsFull())
 		this->Adding(1);
-        count++;
-        arr[count - 1] = new T;
-        *arr[count - 1] = a;
+       arr[count++] = new T(*a);
 }
 
 template <typename T>
