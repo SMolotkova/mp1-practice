@@ -74,7 +74,7 @@ bool Vector::operator==(const Vector & v) const
     if (n != v.n) 
 	    return false;
     int flag = 0;
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < n; i++)
     {
         if (x[i] != v.x[i]) 
 		flag = 1;
@@ -83,8 +83,9 @@ bool Vector::operator==(const Vector & v) const
 	    return false;
     return true;
 }
-Vector Vector::operator= (const Vector& v) 
-{       if(*this  == v)
+const Vector& Vector::operator= (const Vector& v) 
+{   
+	if(*this  == v)
 		return;
 	delete[] x;
 	n = v.n;
@@ -101,7 +102,7 @@ double Vector::Length() const
 	result = sqrt(result);
 	return result;
 }
-Vector Vector::operator+= (const Vector& v)
+Vector& Vector::operator+= (const Vector& v)
 {
 	if(v.n != n)
 		throw "Error";
@@ -109,7 +110,7 @@ Vector Vector::operator+= (const Vector& v)
 		x[i] += v.x[i];
 	return *this;
 }
-Vector Vector::operator-= (const Vector& v)
+Vector& Vector::operator-= (const Vector& v)
 {
 	if(v.n != n)
 		throw "Error";
@@ -117,19 +118,19 @@ Vector Vector::operator-= (const Vector& v)
 		x[i] -= v.x[i];
 	return *this;
 }
-Vector Vector::operator+= (double a)
+Vector& Vector::operator+= (double a)
 {
 	for (int i = 0; i < n; i++)
 		x[i] += a;
 	return *this;
 }
-Vector Vector::operator-= (double a)
+Vector& Vector::operator-= (double a)
 {
 	for (int i = 0; i < n; i++)
 		x[i] -= a;
 	return *this;
 }
-Vector Vector::operator*= (double a)
+Vector& Vector::operator*= (double a)
 {
 	for (int i = 0; i < n; i++)
 		x[i] *= a;
@@ -140,7 +141,7 @@ Vector Vector::operator*= (double a)
 double& Vector::operator[](int index)
 {
     if ((index < 0) || (index >= n))
-        throw "Not correct index!";
+        throw "Error";
 
     return x[index];
 }
@@ -148,7 +149,7 @@ double& Vector::operator[](int index)
 const double& Vector::operator[](int index) const
 {
     if ((index < 0) || (index >= n))
-        throw "Not correct index!";
+        throw "Error";
 
     return x[index];
 }
@@ -177,6 +178,5 @@ ostream& operator<< (ostream &output, const Vector& v)
         else
             output << v[i] << ")";
     }
-
     return output;
 }
