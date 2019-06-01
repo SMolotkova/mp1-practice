@@ -29,7 +29,7 @@ public:
 	Vector& operator*= (double a);
 	
 	double& operator[](int);
-    const double& operator[](int) const;
+        const double& operator[](int) const;
 	friend istream& operator>> (istream& input, Vector& v);
-    friend ostream& operator<< (ostream& output, const Vector& v); 
+        friend ostream& operator<< (ostream& output, const Vector& v); 
 };
