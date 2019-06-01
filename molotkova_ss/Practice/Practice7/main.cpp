@@ -5,28 +5,28 @@ using namespace std;
 
 void main()
 {
-	Vector a(3);//создать с параметрами
+	Vector a(3);
 	a.Input();
 	cout << " a output";
 	a.Output();
 	Vector b;
-	b = a;//приравнять
+	b = a;
 	cout << " b = a" << " " << " b output";
 	b.Output();
 	Vector c;
-	c = a + b;//сложение
+	c = a + b;
 	cout << " c = a + b";
 	c.Output();
 	Vector d;
-	d = a - b;//сложение
+	d = a - b;
 	cout << " d = a - b";
 	d.Output();
 	double scal;
-	scal = a * b;//скаляр
+	scal = a * b;
 	cout << " scal" << scal;
 	double leng = d.Length();
 	cout << "lengths" << leng;
 	*(a[2]) = 5;
-	cout << " измененная третья координата";
+	cout << " РёР·РјРµРЅРµРЅРЅР°СЏ С‚СЂРµС‚СЊСЏ РєРѕРѕСЂРґРёРЅР°С‚Р°";
 	a.Output();
 }
