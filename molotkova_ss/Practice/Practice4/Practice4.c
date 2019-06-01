@@ -6,11 +6,11 @@ int scan(int dop[], int quantity[], int dlya_dop)
 	int i;
 	do
 	{
-		printf("Enter barcode\n");
-		scanf("%s", &tovar);
-
-		dop[dlya_dop] = tovar[3] - '0' + (tovar[2] - '0') * 10 + (tovar[1] - '0') * 100 + (tovar[0] - '0') * 1000;
-	} while ((dop[dlya_dop] > N) || (dop[dlya_dop] < 1));
+	printf("Enter barcode\n");
+	scanf("%s", &tovar);
+	dop[dlya_dop] = tovar[3] - '0' + (tovar[2] - '0') * 10 + (tovar[1] - '0') * 100 + (tovar[0] - '0') * 1000;
+	} 
+	while ((dop[dlya_dop] > N) || (dop[dlya_dop] < 1));
 	printf("\nEnter quantity\n");
 	scanf("%d", &i);
 	return i;
@@ -33,9 +33,10 @@ void check_formation(char names[][10], int prices[], int discounts[], int quanti
 	int i;
 	for (i = 0; i < N; i++)
 	{
-		if (quantity[i] > 0) {
+		if (quantity[i] > 0) 
+		{
 			description(names, prices, discounts, i);
-			printf("QQQQ=%d", quantity[i]);
+			printf("Quantity=%d", quantity[i]);
 			a = a + quantity[i] * prices[i];
 			b = b + prices[i] * 0.01 * (100 - discounts[i]) * quantity[i];
 		}
@@ -52,10 +53,20 @@ void main()
 	int discounts[N] = { 0, 10, 15, 5 };
 	int quantity[N] = { 0 };//array for quantity goods
 	int dop[10];
-	int p;
-	int q;
-	int dlya_dop = 0;
+	int p,i,q;
+	int dlya_dop = 0;	
 	q = scan(dop, quantity, dlya_dop);
+	
+	char **scan = (char**)malloc(4 * sizeof(char*));//штрихкод
+	for (i = 0; i < 5; i++)
+	{
+	scan[i] = (char*)malloc(sizeof(char) * 4);
+        scan[i][3] = i % 10 + '0';
+        scan[i][2] = (i / 10) % 10 + '0';
+        scan[i][1] = (i / 100) % 10 + '0';
+        scan[i][0] = (i / 1000) + '0';
+	}
+	
 	do
 	{
 		printf("1-Scan\n 2-Description\n 3-Add\n 4-Check form\n 5- Itog check\n");
