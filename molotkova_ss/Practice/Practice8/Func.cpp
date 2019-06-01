@@ -3,12 +3,6 @@
 #include "Header_Matrix.h"
 using namespace std;
 
-Matrix::Matrix()
-{
-	rows = 0; 
-	cols = 0; 
-	matrix = NULL;
-}
 Matrix::Matrix(int rows, int cols)
 {
 	this->rows = rows;
@@ -98,7 +92,7 @@ double* Matrix::operator[](int number_of_row) const
 	return &(matrix[number_of_row * cols]);
 
 }
-Matrix& Matrix::operator=(const Matrix& mtrx)
+const Matrix& Matrix::operator=(const Matrix& mtrx)
 {
 	if (*this == mtrx)
 		return *this;
@@ -117,7 +111,7 @@ bool Matrix::operator==(const Matrix& mtrx)const
 		{return false;}
 	return true;			
 }
-void Matrix::Output()const
+/*void Matrix::Output()const
 {
 	if ((cols == 0) || (rows == 0))
 		throw "Matrix is empty";
@@ -132,4 +126,34 @@ void Matrix :: Input()const
 {
 	for (int i = 0; i < (cols * rows); i++)
         cin >> matrix[i];
+}*/
+
+istream& operator>>(istream& input, Matrix& mtrx)
+{
+    for (int i = 0; i < (mtrx.rows * mtrx.cols); i++)
+        input >> mtrx.matrix[i];
+
+    return input;
+}
+
+ostream& operator<<(ostream &output, const Matrix& mtrx)
+{
+    if ((mtrx.rows * mtrx.cols) == 0)
+    {
+        out << "Empty matrix.";
+        return output;
+    }
+
+    for (int i = 0; i < (mtrx.rows * mtrx.cols); i++)
+    {
+        if (i % mtrx.cols == 0)
+            output << "| ";
+
+        output << mtrx.matrix[i] << " ";
+
+        if ((i + 1) % mtrx.cols == 0)
+            output << "|" << endl;
+    }
+
+    return output;
 }
