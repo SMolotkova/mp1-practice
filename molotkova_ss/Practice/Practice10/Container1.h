@@ -11,7 +11,6 @@ private:
     int maxsize;
     void Adding(int add);
 public:
-    Container1();
     Container1(int count);
     Container1(const Container1& tmp);
     ~Container1();
@@ -22,19 +21,12 @@ public:
     int Find(T a)const;
     void Add(T a);
     void Delete(T a);
-	T& operator[](int i);//input
-	const T& operator[](int i)const;//reading
+    T& operator[](int i);//input
+    const T& operator[](int i)const;//reading
 
     void Print()const;
     void Fill(int count);
 };
-
-template <typename T>
-Container1<T>::Container1()
-{
-    count = 0;
-    maxsize = 0;
-}
 
 template <typename T>
 Container1<T>::Container1(int maxsize)
@@ -45,7 +37,7 @@ Container1<T>::Container1(int maxsize)
 }
 
 template <typename T>
-Container1<T>::Container1(const Container1& tmp)
+Container1<T>::Container1(const Container1<T>& tmp)
 {
     count = tmp.count;
 	maxsize = tmp.maxsize;
@@ -59,9 +51,9 @@ Container1<T>::Container1(const Container1& tmp)
 template <typename T>
 Container1<T>::~Container1()
 {
-    delete arr;
+    delete [] arr;
     count = 0;
-	maxsize = 0;
+    maxsize = 0;
 }
 
 template <typename T>
@@ -69,12 +61,10 @@ bool Container1<T>::IsFull()const
 {
     if (count == maxsize) 
 	{
-		cout<<"Full"<<endl;
 		return true;
 	}
 	else 
 	{
-		cout <<"Is not full"<<endl;
 		return false;
 	}
 }
@@ -83,12 +73,9 @@ template <typename T>
 bool Container1<T>::IsEmpty()const
 {
     if (count == 0)
-	{
-		cout << "Empty" << endl;
-		return true;
-	}
-	else 
-		return false;
+	return true;
+    else 
+	return false;
 }
 
 template <typename T>
@@ -104,8 +91,8 @@ int Container1<T>::Find(T a)const
 		else
 		{
 			cout << "Element does not exist"<<endl;
-			return -1;
-		}	
+		}
+	    return -1;	
 	}
 }
 
