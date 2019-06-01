@@ -7,8 +7,6 @@ private:
 	int cols; // ryad
 	double *matrix;
 public:
-	//constuctors
-	//Matrix();
 	Matrix(int rows, int cols);
 	Matrix(const Matrix& mtrx);
 	Matrix(double *mtrx, int rows, int cols);
@@ -30,9 +28,6 @@ public:
 
 	bool operator==(const Matrix& mtrx)const;
 
-	/*void Output()const;
-	void Input()const;*/
-	
 	friend istream& operator>> (istream& input, Matrix& mtrx); 
-        friend ostream& operator<< (ostream& output, const Matrix& mtrx); 
+    friend ostream& operator<< (ostream& output, const Matrix& mtrx); 
 };

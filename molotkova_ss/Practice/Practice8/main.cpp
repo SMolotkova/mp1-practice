@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {
     int i;
-    Matrix m1;
+    Matrix m1(2, 2);
     Matrix m2(2, 2);
     Matrix copy(m2);
     cout << copy << endl;
@@ -14,7 +14,7 @@ int main()
     cout << m2 << endl;
     Matrix m3(2, 3);
     cin << m3 << endl;
-    cout << m3 << endl
+	cout << m3 << endl;
     try
     {
         m1 = m3 + m2;

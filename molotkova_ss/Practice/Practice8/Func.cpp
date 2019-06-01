@@ -15,7 +15,7 @@ Matrix::Matrix(const Matrix& mtrx)
 	cols = mtrx.cols;
 	matrix = new double [rows * cols];
 	for (int i = 0; i < (rows * cols); i++)
-		matrix[i] = mtrx.matrix[i];
+		memcpy(&matrix[i], &mtrx.matrix[i], sizeof(matrix[i]));
 }
 Matrix::Matrix(double *mtrx, int rows, int cols)
 {
@@ -23,7 +23,7 @@ Matrix::Matrix(double *mtrx, int rows, int cols)
 	this->cols = cols;
 	matrix = new double [rows * cols];
 	for (int i = 0; i < (rows * cols); i++)
-		matrix[i] = mtrx[i];
+		memcpy(&matrix[i], &mtrx[i], sizeof(matrix[i]));
 }
 //destructor
 Matrix::~Matrix()
@@ -72,10 +72,13 @@ Matrix Matrix::operator*(const Matrix& mtrx) const
 	if ( cols != mtrx.rows)
 		throw "Inappropriate matrix sizes";
 	Matrix resMatrix(rows, mtrx.cols);
-	for(int i = 0; i < rows; i++)
+	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < mtrx.cols; j++)
+		{
+			resMatrix.matrix[i * mtrx.cols + j] = 0.0;
 			for (int k = 0; k < cols; k++)
 				resMatrix.matrix[i * mtrx.cols + j] += matrix[i * cols + k] * mtrx.matrix[k * mtrx.cols + i];
+		}
 	return resMatrix;
 }
 Matrix Matrix::operator*(double a) const
@@ -99,7 +102,7 @@ const Matrix& Matrix::operator=(const Matrix& mtrx)
 	this->cols = mtrx.cols;
 	this->rows = mtrx.rows;
 	for (int i = 0; i < (rows * cols); i++)
-		this->matrix[i] = mtrx.matrix[i];
+		memcpy(&matrix[i], &mtrx.matrix[i], sizeof(matrix[i]));
 	return *this;
 }
 bool Matrix::operator==(const Matrix& mtrx)const
@@ -108,31 +111,14 @@ bool Matrix::operator==(const Matrix& mtrx)const
 		return false;
 	for(int i = 0; i < (rows * cols); i++)
 		if (this->matrix[i] != mtrx.matrix[i])
-		{return false;}
+		return false;
 	return true;			
 }
-/*void Matrix::Output()const
-{
-	if ((cols == 0) || (rows == 0))
-		throw "Matrix is empty";
-	for(int i = 0; i < (rows * cols); i++)
-	{
-			cout << matrix[i] << " ";
-			if ( i%rows == 0)
-				cout << endl;
-	}
-}
-void Matrix :: Input()const
-{
-	for (int i = 0; i < (cols * rows); i++)
-        cin >> matrix[i];
-}*/
 
-istream& operator>>(istream& input, Matrix& mtrx)
+ istream& operator>>(istream& input, Matrix& mtrx)
 {
     for (int i = 0; i < (mtrx.rows * mtrx.cols); i++)
         input >> mtrx.matrix[i];
-
     return input;
 }
 
