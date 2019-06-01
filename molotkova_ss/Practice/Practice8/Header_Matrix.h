@@ -8,7 +8,7 @@ private:
 	double *matrix;
 public:
 	//constuctors
-	Matrix();
+	//Matrix();
 	Matrix(int rows, int cols);
 	Matrix(const Matrix& mtrx);
 	Matrix(double *mtrx, int rows, int cols);
@@ -26,10 +26,13 @@ public:
 
 	double* operator[](int number_of_row) const;
 
-	Matrix& operator=(const Matrix& mtrx);
+	const Matrix& operator=(const Matrix& mtrx);
 
 	bool operator==(const Matrix& mtrx)const;
 
-	void Output()const;
-	void Input()const;
+	/*void Output()const;
+	void Input()const;*/
+	
+	friend istream& operator>> (istream& input, Matrix& mtrx); 
+        friend ostream& operator<< (ostream& output, const Matrix& mtrx); 
 };
