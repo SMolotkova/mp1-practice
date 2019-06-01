@@ -5,14 +5,14 @@ using namespace std;
 
 int main()
 {
-	int i;
+    int i;
     Matrix m1;
     Matrix m2(2, 2);
-    m2.Input();
-	m2.Output();
+    cin << m2 << endl;
+    cout << m2 << endl;
     Matrix m3(2, 3);
-	m3.Input();
-	m3.Output();
+    cin << m3 << endl;
+    cout << m3 << endl
     try
     {
         m1 = m3 + m2;
@@ -25,7 +25,7 @@ int main()
 
     try
     {
-		m1.Output();
+    cout << m1 << endl
     }
     catch (const char* a)
     {
@@ -34,22 +34,12 @@ int main()
 
     try
     {
-		m2.Output();
+        cout << m2 << endl
     }
     catch (const char* a)
     {
         cout << a << endl;
     }
-
-    try
-    {
-		m3.Output();
-    }
-    catch (const char* a)
-    {
-        cout << a << endl;
-    }
-
 
     try
     {
@@ -63,7 +53,7 @@ int main()
 
     try
     {
-		m1.Output();
+    	cout << m1 << endl;
     }
     catch (const char* a)
     {
@@ -82,7 +72,7 @@ int main()
 
     try
     {
-		m1.Output();
+		cout << m1 << endl;
     }
     catch (const char* a)
     {
@@ -93,7 +83,7 @@ int main()
     cout << "m1 = m3 + 2.0" << endl;
     try
     {
-        m1.Output();
+        cout << m1 << endl;
     }
     catch (const char* a)
     {
