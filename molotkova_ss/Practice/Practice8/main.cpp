@@ -8,6 +8,8 @@ int main()
     int i;
     Matrix m1;
     Matrix m2(2, 2);
+    Matrix copy(m2);
+    cout << copy << endl;
     cin << m2 << endl;
     cout << m2 << endl;
     Matrix m3(2, 3);
@@ -22,38 +24,13 @@ int main()
     {
         cout << a << endl;
     }
-
-    try
-    {
-    cout << m1 << endl
-    }
-    catch (const char* a)
-    {
-        cout << a << endl;
-    }
-
-    try
-    {
-        cout << m2 << endl
-    }
-    catch (const char* a)
-    {
-        cout << a << endl;
-    }
-
+    
+     m1 = m3 - 3.0;
+     cout << "Operator + : m1 = m3 - 3.0" << endl;
     try
     {
         m1 = m3 - m2;
         cout << "Operator - :m1 = m2 - m1" << endl;
-    }
-    catch (const char* a)
-    {
-        cout << a << endl;
-    }
-
-    try
-    {
-    	cout << m1 << endl;
     }
     catch (const char* a)
     {
@@ -70,25 +47,9 @@ int main()
         cout << a << endl;
     }
 
-    try
-    {
-		cout << m1 << endl;
-    }
-    catch (const char* a)
-    {
-        cout << a << endl;
-    }
-
     m1 = m3 + 2.0;
     cout << "m1 = m3 + 2.0" << endl;
-    try
-    {
-        cout << m1 << endl;
-    }
-    catch (const char* a)
-    {
-        cout << a << endl;
-    }
+    
 
     try
     {
