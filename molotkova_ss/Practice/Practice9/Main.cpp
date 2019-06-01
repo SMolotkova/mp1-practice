@@ -10,7 +10,7 @@ using namespace std;
 void main()
 {
 	ToDoList list;
-	string path[50];
+	string path;
 	cin >> path;
 	try
 	{

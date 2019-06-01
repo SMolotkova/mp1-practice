@@ -25,7 +25,7 @@ ToDoList::~ToDoList()
 	delete[]tasks;
 	amount_of_tasks = 0;
 }
-void ToDoList::Read(char* a)
+void ToDoList::Read(string a)
 {
 	int buff;
 	ifstream file(a);
