@@ -1,3 +1,4 @@
+
 ﻿#include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -67,4 +68,5 @@ void main() {
 		printf("Áûêè=%d, êîðîâû=%d\n", bull, cow);
 	} while (bull != n);
 	printf("Âû ïîáåäèëè, êîëè÷åñòâî ïîïûòîê %d\n", c);
+
 }

@@ -1,3 +1,4 @@
+
 ﻿#include <stdio.h> 
 #define N 5 
 int scanning(int dop[], int quantity[], int dlya_dop, int **scan)
@@ -100,3 +101,4 @@ void main()
 		}
 	} while (p != 5);
 }
+

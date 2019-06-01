@@ -1,3 +1,4 @@
+
 #include <stdio.h> 
 #include <math.h> 
 #include <locale.h> 
@@ -41,4 +42,5 @@ void main()
 	else 
 			printf ("Введенные значения не соответствуют должным");
 }
+
 
