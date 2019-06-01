@@ -3,33 +3,28 @@
 #include "Zag.h"
 using namespace std;
 
-Vector::Vector()//consructor по умолчанию
-{
-	n = 0;// размер вектора
-	x = NULL;//координаты
-}
-Vector::Vector(int n)//конструктор с параметрами
+Vector::Vector(int n)
 {
 	this -> n = n;
 	x = new double[n];
 }
-Vector::Vector(const Vector& v)//конструктор копирования
+Vector::Vector(const Vector& v)
 {
 	n = v.n;
 	x = new double[v.n];
 	for(int i = 0; i < v.n; i++)
 		x[i] = v.x[i];
 }
-Vector::~Vector()// destructor
+Vector::~Vector()
 {
 	delete[]x;
 	n = 0;
 }
-Vector Vector::operator+ (const Vector& v) const //сложение векторов
+Vector Vector::operator+ (const Vector& v) const
 {
 	if(v.n != n)
-		throw "Не совпадают размерности";
-	Vector res(v);//через конструктор копирования
+		throw "РќРµ СЃРѕРІРїР°РґР°СЋС‚ СЂР°Р·РјРµСЂРЅРѕСЃС‚Рё";
+	Vector res(v);
 	for (int i = 0; i < n; i++)
 		res.x[i] += x[i];
 	return res;
@@ -38,44 +33,59 @@ Vector Vector::operator+ (const Vector& v) const //сложение векторов
 Vector Vector::operator- (const Vector& v) const
 {
 	if(v.n != n)
-		throw "не совпали размеры";
+		throw "РЅРµ СЃРѕРІРїР°Р»Рё СЂР°Р·РјРµСЂС‹";
 	Vector res(v);
 	for (int i = 0; i < n; i++)
 		res.x[i] -= x[i];
 	return res;
 }
-double Vector::operator* (const Vector& v) const//скалярное произведение
+double Vector::operator* (const Vector& v) const
 {
 	if(v.n != n)
-		throw "размерности";
+		throw "СЂР°Р·РјРµСЂРЅРѕСЃС‚Рё";
 	double scal = 0;
 	for(int i = 0; i < n; i++)
 		scal += x[i] * v.x[i];
 	return scal;
 }
-Vector Vector::operator+ (double a) const //прибавление константы
+Vector Vector::operator+ (double a) const 
 {
 	Vector res(*this);
 	for (int i = 0; i < n; i++)
 		res.x[i] += a;
 	return res;
 }
-Vector Vector::operator- (double a) const//вычитание константы
+Vector Vector::operator- (double a) const
 {
 	Vector res(*this);
 	for (int i = 0; i < n; i++)
 		res.x[i] -= a;
 	return res;
 }
-Vector Vector::operator* (double a) const //умножение на число
+Vector Vector::operator* (double a) const 
 {
 	Vector res(*this);
 	for (int i = 0; i < n; i++)
 		res.x[i] *= a;
 	return res;
 }
-Vector Vector::operator= (const Vector& v) 
+bool Vector::operator==(const Vector & v) const
 {
+    if (n != v.n) 
+	    return false;
+    int flag = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (x[i] != v.x[i]) 
+		flag = 1;
+    }
+    if (flag == 1) 
+	    return false;
+    return true;
+}
+Vector Vector::operator= (const Vector& v) 
+{       if(*this  == v)
+		return;
 	delete[] x;
 	n = v.n;
 	x = new double[v.n];
@@ -89,7 +99,7 @@ double* Vector::operator[] (int index) const
 		throw "Error";
 	return &(x[index]);
 }
-double Vector::Length()
+double Vector::Length() const
 {
 	double result = 0;
 	for (int i = 0; i < n; i++)
@@ -131,11 +141,10 @@ Vector Vector::operator*= (double a)
 		x[i] *= a;
 	return *this;
 }
-// new delete catch
 void Vector::Output()
 {
 	if (n <= 0)
-		throw "Ошибка";
+		throw "Error";
 	for (int i = 0; i < n; i++)
 		cout << x[i] << " ";
 	cout << endl;
@@ -143,7 +152,7 @@ void Vector::Output()
 void Vector::Input()
 {
 	if (n <= 0)
-		throw "Ошибка";
+		throw "Error";
 	for (int i = 0; i < n; i++)
 		cin >> x[i];
 }
