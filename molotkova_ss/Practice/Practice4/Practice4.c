@@ -1,19 +1,24 @@
 ﻿#include <stdio.h> 
-#define N 4 
-int scan(int dop[], int quantity[], int dlya_dop)
+#define N 5 
+int scanning(int dop[], int quantity[], int dlya_dop, int **scan)
 {
-	char tovar[4];
+	char tovar[4];//будущий шттрихкод
 	int i;
 	do
 	{
-	printf("Enter barcode\n");
-	scanf("%s", &tovar);
-	dop[dlya_dop] = tovar[3] - '0' + (tovar[2] - '0') * 10 + (tovar[1] - '0') * 100 + (tovar[0] - '0') * 1000;
+		printf("Enter barcode\n");
+		scanf("%s", &tovar);
+		i = 0;
+		while (strncmp(tovar, scan[i], 4) != 0)
+		{
+			i++;
+		}
+		dop[dlya_dop] = i;
 	} 
-	while ((dop[dlya_dop] > N) || (dop[dlya_dop] < 1));
+	while (dop[dlya_dop]>N);
 	printf("\nEnter quantity\n");
 	scanf("%d", &i);
-	return i;
+	return i;//количество товара
 }
 void description(char names[][10], int prices[], int discounts[], int i)
 {
@@ -48,20 +53,20 @@ void check_formation(char names[][10], int prices[], int discounts[], int quanti
 }
 void main()
 {
-	char names[N][10] = { "          ", "milk      ", "bread     ", "fish      " };
-	int prices[N] = { 0, 68, 21, 170 };
-	int discounts[N] = { 0, 10, 15, 5 };
+	char names[N][10] = { "          ", "milk      ", "bread     ", "fish      " , "meat"};
+	int prices[N] = { 0, 68, 21, 170, 240 };
+	int discounts[N] = { 0, 10, 15, 5, 20};
 	int quantity[N] = { 0 };//array for quantity goods
 	int dop[10];
 	int p,i,q;
 	int dlya_dop = 0;	
 	q = scan(dop, quantity, dlya_dop);
 	
-	char **scan = (char**)malloc(4 * sizeof(char*));//штрихкод
+	char **scan = (char**)malloc(5 * sizeof(char*));//штрихкод, 5-их количество
 	for (i = 0; i < 5; i++)
 	{
-	scan[i] = (char*)malloc(sizeof(char) * 4);
-        scan[i][3] = i % 10 + '0';
+		scan[i] = (char*)malloc(sizeof(char) * 4);//4 количество цифр
+        scan[i][3] = i % 10 + '0';// для чар
         scan[i][2] = (i / 10) % 10 + '0';
         scan[i][1] = (i / 100) % 10 + '0';
         scan[i][0] = (i / 1000) + '0';
@@ -74,7 +79,7 @@ void main()
 		switch (p)
 		{
 		case 1:
-			q = scan(dop, quantity, dlya_dop);
+			q = scanning(dop, quantity, dlya_dop, scan);
 			break;
 		case 2:
 			description(names, prices, discounts, dop[dlya_dop]);
@@ -88,6 +93,9 @@ void main()
 			break;
 		case 5:
 			check_formation(names, prices, discounts, quantity);
+			free(quantity);
+			free(dop);
+			dlya_dop = 0;
 			break;
 		}
 	} while (p != 5);
