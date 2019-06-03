@@ -37,7 +37,8 @@ public:
     };
 
     friend ostream& operator<<(ostream& out, const Container1& tmp)
-        if (tmp.count == 0)
+    {    
+    	if (tmp.count == 0)
         {
             output << "The container is empty";
             return output;
@@ -53,7 +54,7 @@ public:
         }
 
         return output;
-    }
+    };
 };
 
 template <typename T>
