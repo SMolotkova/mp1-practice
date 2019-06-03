@@ -23,7 +23,7 @@ public:
     void Delete(T a);
     T& operator[](int i);//input
     const T& operator[](int i)const;//reading
-    friend istream& operator>>(istream&, Container1& tmp)
+    friend istream& operator>>(istream& input, Container1& tmp)
     {
         for (int i = 0; i < tmp.count; i++)
             input >> tmp[i];
@@ -31,7 +31,7 @@ public:
         return input;
     };
 
-    friend ostream& operator<<(ostream& out, const Container1& tmp)
+    friend ostream& operator<<(ostream& output, const Container1& tmp)
     {
 	if (tmp.count == 0)
         {
